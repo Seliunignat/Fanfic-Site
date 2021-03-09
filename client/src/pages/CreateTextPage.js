@@ -13,7 +13,8 @@ export const CreateTextPage = () => {
     const { loading, request, error, clearError } = useHttp();
     const [textTitle, setTextTitle] = useState('')
     const [numberOfChapters, setNumberOfChapters] = useState(0)
-    const [chapters, setChapters] = useState(new Array(0))
+    const [chapters, setChapters] = useState([])
+    //const [ourChapters, setOurChapters] = useState([])
     const [form, setForm] = useState({
         title: "",
         author: auth.userId,
@@ -22,42 +23,38 @@ export const CreateTextPage = () => {
     });
 
 
-    const addNewChapter = () => {
-        chapterAccordions.push("chapterAccordion" + (chapterAccordions.length + 1))
-        console.log(chapterAccordions)
-        writeChapterAccordions()
+    const addNewChapter = () =>{
+        chapters.push({id: numberOfChapters, chapterTitle: "", chapterContent: "", order: 0, likes: 0})
+        setChapters(chapters)
+        setNumberOfChapters(chapters.length)
     }
+
+    useEffect(()=>{
+        console.log(numberOfChapters)
+        console.log(chapters)
+    }, [numberOfChapters])
 
     const redirectToUserPage = () => {
         history.push('/user')
     }
 
-    const createHandler = async () => {
-        for (let i = 0; i < chapterAccordions.length; i++) {
-            const idChaptertitle = 'chapter' + (i+1) + 'Title'
-            const chapterTitle = document.getElementById(idChaptertitle).value
-            console.log(chapterTitle)
-            const idtextArea = 'chapter' + (i+1) + 'TextArea'
-            const chapterContent = document.getElementById(idtextArea).value
-            console.log(chapterContent)
-            var curr_chapter = {id: i, chapterTitle: chapterTitle, content: chapterContent, order: null, likes: 0}  
-            chapters.push(curr_chapter)
-            console.log(chapters)         
-        }
-        try {
-            const data_req = await request('/api/text/create', 'POST', {title: form.title, author: auth.userId, chapters: chapters}, {Authorization: `Bearer ${auth.token}`})
-            console.log(data)
-            message(data_req.message)
-            if(data_req.message === 'Фанфик успешно создан')
-                history.push('/user')
-        } catch (e) {
-            
-        }
-    }
+    const changeChapterHandler = (event) => {
+            //console.log("changeChapterTitleHandler: " + event.target.name)
+            var chapterId = event.target.name
+            if(chapterId.includes("chapterTitle")){
+                chapterId = chapterId.replace("chapterTitle", "")                    
+                const chapter = chapters.find(chapter => chapter.id === (chapterId-1))
+                chapter.chapterTitle = event.target.value                   
+            }
+            else if(chapterId.includes("chapterContent")){
+                chapterId = chapterId.replace("chapterContent", "")
+                const chapter = chapters.find(chapter => chapter.id === (chapterId-1))
+                chapter.chapterContent = event.target.value  
+            }
+            //console.log(chapters)
+    };
 
     const changeHandler = (event) => {
-        //console.log(event.target.name)
-        //if(event.target.name)
         setForm({ ...form, [event.target.name]: event.target.value });        
     };
 
@@ -67,41 +64,16 @@ export const CreateTextPage = () => {
         clearError();
     }, [error, message, clearError]);
 
-    const chapterAccordions= []
-
-    const writeChapterAccordions = () => {
-        //document.querySelector('#chapters').innerHTML = ''     
-        for (let i = 0; i < chapterAccordions.length; i++) {               
-            //console.log(`${selector}`)
-            //console.log(document.getElementById(chapterAccordions[i]))
-            if(!document.querySelector(`#${chapterAccordions[i]}`)){
-                document.querySelector("#chapters").insertAdjacentHTML("beforeend", `
-                <div id="${chapterAccordions[i]}" class="accordion" style="width: 40rem;">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading${i+1}">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${i+1}" aria-expanded="false" aria-controls="collapse${i+1}">
-                                Глава ${i+1}: <input 
-                                        class="form-control " 
-                                        id="chapter${i+1}Title"   
-                                        name="chapter${i+1}Title"
-                                        type="text"
-                                        placeholder="Title" 
-                                        style="width: 18rem; margin-left: 10px;" 
-                                        // onChange="changeHandler"
-                                        // required={true}                                                                    
-                                        ></input>
-                            </button>
-                        </h2>
-                        <div id="collapse${i+1}" class="accordion-collapse collapse" aria-labelledby="heading${i+1}" data-bs-parent="#chaptersAccordion">
-                            <div class="accordion-body">
-                                <textarea class="form-control" id="chapter${i+1}TextArea" type="text" style="width: 40rem; margin-left: -1.4rem; margin-top: -1rem; margin-bottom: -1rem;"></textarea>
-                            </div>
-                        </div>
-                    </div>        
-                </div>
-                `)   
-            }         
-        }        
+    const createHandler = async () => {
+        try {
+            const data_req = await request('/api/text/create', 'POST', {title: form.title, author: auth.userId, chapters: chapters}, {Authorization: `Bearer ${auth.token}`})
+            console.log(data)
+            message(data_req.message)
+            if(data_req.message === 'Фанфик успешно создан')
+                history.push('/user')
+        } catch (e) {
+            
+        }
     }
 
     return(
@@ -139,7 +111,7 @@ export const CreateTextPage = () => {
                             <h2>Chapters: </h2> 
                         </div>
                         <div className="col-2 mx-auto" style={{marginTop: '0.4rem'}}>
-                            <button className="btn btn-outline-primary" onClick={addNewChapter}>Add chapter</button>
+                            <button className="btn btn-outline-primary" onClick={addNewChapter}>Add chapter</button>                            
                         </div>
                         <div className="col mx-auto">
 
@@ -147,61 +119,39 @@ export const CreateTextPage = () => {
                         
                     </div>
                     <div id="chapters">
-                        {chapterAccordions && chapterAccordions.forEach(element => {
-                            element
-                        })}
-                        {/* <div className="accordion" id="chapterOne" style={{width: '40rem'}}>
-                            <div className="accordion-item">
-                                <h2 className="accordion-header" id="headingOne">
-                                    <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                        Глава 1: <input 
-                                                className="form-control " 
-                                                id="chapterTitle" 
-                                                name="chapterTitle"
-                                                type="text"
-                                                placeholder="Title" 
-                                                style={{width: '18rem'}} 
-                                                // required={true}
-                                                // onChange={changeHandler}                                
-                                                ></input>
-                                    </button>
-                                </h2>
-                                <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#chaptersAccordion">
-                                    <div className="accordion-body">
-                                        <textarea className="form-control" type="text" style={{width: '40rem', marginLeft: '-1.4rem', marginTop: '-1rem', marginBottom: '-1rem'}}>
-
-                                        </textarea>
+                        {chapters && chapters.map((chapter,index) => {
+                            return(
+                                <div className="accordion" id={"chapter" + (index+1)} style={{width: '40rem'}}>
+                                    <div className="accordion-item">
+                                        <h2 className="accordion-header" id={"heading" + (index+1)}>
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={"#collapse" + (index+1)} aria-expanded="false" aria-controls={"collapse" + (index+1)}>
+                                                Глава {index+1}: <input 
+                                                        className="form-control " 
+                                                        id={"chapterTitle" + (index+1)}
+                                                        name={"chapterTitle" + (index+1)}
+                                                        type="text"
+                                                        placeholder="Title" 
+                                                        style={{width: '18rem', marginLeft: '1rem'}} 
+                                                        // required={true}
+                                                        onChange={changeChapterHandler}                                
+                                                        ></input>
+                                            </button>
+                                        </h2>
+                                        <div id={"collapse" + (index+1)} className="accordion-collapse collapse" aria-labelledby={"heading" + (index+1)} data-bs-parent={"#chaptersAccordion" + (index+1)}>
+                                            <div className="accordion-body">
+                                                <textarea 
+                                                id={"chapterContent" + (index+1)} 
+                                                name={"chapterContent" + (index+1)} 
+                                                className="form-control" type="text" 
+                                                onChange={changeChapterHandler} 
+                                                style={{width: '40rem', marginLeft: '-1.4rem', marginTop: '-1rem', marginBottom: '-1rem'}}>
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                    </div>                                
                                 </div>
-                            </div>
-                            </div>
-                            
-                        </div>
-                        <div className="accordion" id="chapterTwo" style={{width: '40rem'}}>
-                            <div className="accordion-item">
-                                <h2 className="accordion-header" id="headingTwo">
-                                    <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        Глава 2: <input 
-                                                className="form-control " 
-                                                id="chapterTitle" 
-                                                name="chapterTitle"
-                                                type="text"
-                                                placeholder="Title" 
-                                                style={{width: '18rem'}} 
-                                                // required={true}
-                                                // onChange={changeHandler}                                
-                                                ></input>
-                                    </button>
-                                </h2>
-                                <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#chaptersAccordion">
-                                    <div className="accordion-body">
-                                        <textarea className="form-control" type="text" style={{width: '40rem', marginLeft: '-1.4rem', marginTop: '-1rem', marginBottom: '-1rem'}}>
-
-                                        </textarea>
-                                </div>
-                            </div>
-                            </div>
-                            
-                        </div> */}
+                            )
+                        })}                        
                     </div>
                     
                     <div className="container centeredElement">
