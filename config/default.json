@@ -1,0 +1,6 @@
+{
+    "port": 5000,
+    "jwtSecret": "ignat fanfic site",
+    "mongoUri": "mongodb+srv://ignat:1234qwer@fanficsitedb.u4mom.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "baseUrl": "http://localhost:5000"
+}

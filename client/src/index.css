@@ -1,0 +1,133 @@
+/* body {
+    background: #e7e7e7;
+} */
+
+
+.cCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    padding: 15px;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.centeredElement{
+    display: flex;
+    justify-content: center;
+}
+
+.align-items-center{
+    align-items: center!important;
+}
+
+.dShadow {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, .2);
+}
+
+.mW548 {
+    max-width: 548px;
+}
+
+.w100 {
+    width: 100%;
+}
+
+.boRa {
+    border-radius: 8px;
+}
+
+.mB20 {
+    margin-bottom: 20px;
+}
+
+.mB15 {
+    margin-bottom: 15px;
+}
+
+.mB10 {
+    margin-bottom: 10px;
+}
+
+.Toastify__toast {
+    margin-bottom: 10px !important;
+    border-radius: 8px !important;
+}
+
+.Toastify__toast {
+    min-height: unset !important;
+}
+
+.Toastify__toast-body {
+    margin: 0 !important;
+}
+
+.Toastify__progress-bar--default {
+    background: var(--primary) !important;
+}
+
+.Toastify__progress-bar--animated {
+    animation: Toastify__trackProgress linear 1 forwards;
+  }
+
+.bgWhite {
+    background: #fff;
+}
+
+.mLeft80 {
+    margin-left: -80px;
+}
+
+.tableOverflow {
+    overflow-x: auto;
+}
+
+.table thead th {
+    border-bottom: 0;
+}
+
+@media (max-width: 991px) {
+    .navbar .container-fluid {
+        flex-direction: column;
+    }
+    .navbar-brand {
+        margin: 0;
+    }
+    .mLeft80 {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 830px) {
+    .table {
+        font-size: .7em;
+    }
+}
+
+.fa{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 30px;
+    border-radius: 7px;
+    color: black;
+}
+
+.col .fa:hover{
+    background-color: #91d3ff;
+}
+
+.rounded{
+    border-radius: 8rem;
+}
+
+.customCard{
+    width: 18rem;
+}
