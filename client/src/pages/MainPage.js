@@ -10,7 +10,7 @@ export const MainPage = () => {
     return(
         <>
         <Navbar windowPage={"/main"}></Navbar>
-        <div>
+        <div className="bg-light">
             <h1>Main Page</h1>
             <button className="btn btn-primary">Action</button>
         </div>

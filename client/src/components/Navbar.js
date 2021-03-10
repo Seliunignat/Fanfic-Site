@@ -58,7 +58,7 @@ export const Navbar = (props) => {
     }, [currentWindowPage])
 
     return (
-        <nav className="navbar navbar-light dShadow" style={{background: '#e3f2fd', zIndex: 1} }>
+        <nav className="navbar sticky-top navbar-light dShadow" style={{background: 'white', zIndex: 1} }>
             <div className="container-fluid">
                 <h1 className="navbar-brand" style={{fontSize: 40}}>Мордор</h1>
                 <form className="d-flex">

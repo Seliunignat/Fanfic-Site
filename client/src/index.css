@@ -131,3 +131,12 @@
 .customCard{
     width: 18rem;
 }
+
+.cardFanfics{
+    width: 60rem;
+}
+
+.bg-image{
+    background: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg') center no-repeat;
+    height: 15rem;
+}

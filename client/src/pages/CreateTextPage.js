@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
 import { useHttp } from '../hooks/http.hook'
 import { useMessage } from '../hooks/message.hook'
-//const Chapter = require('../../../models/Chapter')
 
 export const CreateTextPage = () => {
     const message = useMessage();
