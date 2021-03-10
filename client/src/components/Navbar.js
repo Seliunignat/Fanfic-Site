@@ -5,16 +5,12 @@ import {AuthPage} from '../pages/AuthPage'
 import { useAuth } from '../hooks/auth.hook'
 
 export const Navbar = (props) => {
-    //const isUserAuthenticated = props.isAuthenticated
     const history = useHistory()
-
-    // const {token, login, logout, userId, username, email, isBanned} =  useAuth()
     
     const [currentUserName, setCurrentUserName] = useState(null)
 
     const auth = useContext(AuthContext)
     const isUserAuthenticated = !!auth.token
-    //console.log("auth: " + JSON.stringify(auth))
     const currentWindowPage = props.windowPage
 
 
@@ -29,33 +25,30 @@ export const Navbar = (props) => {
     }
     
     const redirectToMainPage = () => {
-       // window.location.href = "/main"
        history.push("/main")
     }
 
     const goToUserPage = () => {
-        //window.location.href = "/user"
         history.push("/user")
     }
     
     useEffect(() => {
         if (auth.username) {
             console.log('auth: '+ auth.username)
-            //console.log(JSON.stringify(auth.username))
             setCurrentUserName(auth.username)
             return;
         }
     }, [auth.username]);
         
 
-    useEffect(() => {
-        console.log("currentWindowPage: " + currentWindowPage)
-        const data = JSON.parse(localStorage.getItem('userData'))
-        if(data && data.token) {
-            //currentUserName = JSON.parse(localStorage.getItem('userData')).username
-            //console.log(data)
-        }
-    }, [currentWindowPage])
+    // useEffect(() => {
+    //     console.log("currentWindowPage: " + currentWindowPage)
+    //     const data = JSON.parse(localStorage.getItem('userData'))
+    //     if(data && data.token) {
+    //         //currentUserName = JSON.parse(localStorage.getItem('userData')).username
+    //         //console.log(data)
+    //     }
+    // }, [currentWindowPage])
 
     return (
         <nav className="navbar sticky-top navbar-light dShadow" style={{background: 'white', zIndex: 1} }>
@@ -72,19 +65,19 @@ export const Navbar = (props) => {
                 {/* {console.log('isAuthenticated: ' + JSON.stringify(isAuthenticated))} */}
                 
                 {isUserAuthenticated && 
-                    <div className="row align-items-center" >
+                    <div className="d-flex" >
                         {currentWindowPage === "/main" && 
                             <>
                                 <div className="col mx-auto my-auto ">
-                                    <h5 align-items-center>{currentUserName}</h5>                                    
+                                    <h5 className="mt-2 me-1">{currentUserName}</h5>                                    
                                 </div>
-                                <div className="col mx-auto my-auto">
+                                <div className="col me-2">
                                     <NavLink to="/user"><i className="fa fa-user" ></i></NavLink>
                                 </div>
                             </>
                         }
                         {currentWindowPage !== "/main" && 
-                            <div className="col mx-auto my-auto">
+                            <div className="col me-2">
                                 <NavLink to="/main"><i className="fa fa-home" ></i></NavLink>
                             </div>
                         }

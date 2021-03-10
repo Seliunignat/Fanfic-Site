@@ -36,7 +36,7 @@ async(req, res) => {
 
 router.get('/', auth, async(req, res) => {
     try {
-        const texts = await Text.find({ author: req.user.userId })
+        const texts = await Text.find({ author: req.user.userId }).populate('author')
         res.json(texts)
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})

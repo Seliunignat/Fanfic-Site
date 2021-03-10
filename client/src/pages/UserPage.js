@@ -37,12 +37,13 @@ export const UserPage = () => {
                 Authorization: `Bearer ${auth.token}`,
             });
             setTexts(fetched);
-            console.log(texts)
+            //console.log(texts)
         } catch (e) {
-            //auth.logout();
-            console.log(e.message)
+            message(e.message)
+            auth.logout();
+            //console.log(e.message)
         }
-    }, [auth.token, request])
+    }, [auth.token, message, request])
 
     useEffect(() => {
         fetchTexts()
@@ -99,7 +100,7 @@ export const UserPage = () => {
                         <div className="card cardFanfics dShadow">
                             <h1 className="border-bottom text-center">My Fanfics</h1>    
                             <div className="container">
-                            {!loading && 
+                            {!loading &&
                                 <FanficList texts={texts}></FanficList>
                             }
                             {

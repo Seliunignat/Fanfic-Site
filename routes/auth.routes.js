@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
 const {check, validationResult} = require('express-validator')
 const User = require('../models/User')
+const auth = require('../middleware/auth.middleware')
 const router = Router()
 
 // /api/auth/register
@@ -90,6 +91,20 @@ router.post(
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
         console.log('Error: ' + e.message)
     }   
+})
+
+router.get("/user/:id", async(req, res) => {
+    try {
+        const user = await User.findOne({_id: req.params.id})
+        if(!user){
+            return res.status(400).json({message: 'Пользователь не найден'})
+        }
+    res.json({userId: user.id, username: user.username})
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+        console.log('Error: ' + e.message)
+    }
+    
 })
 
 module.exports = router
