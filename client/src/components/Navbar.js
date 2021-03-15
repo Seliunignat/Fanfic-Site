@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext"
 import {NavLink, Redirect, Route, Switch, useHistory} from 'react-router-dom'
 import {AuthPage} from '../pages/AuthPage'
 import { useAuth } from '../hooks/auth.hook'
+import { set } from 'mongoose'
 
 export const Navbar = (props) => {
     const history = useHistory()
@@ -13,6 +14,7 @@ export const Navbar = (props) => {
     const isUserAuthenticated = !!auth.token
     const currentWindowPage = props.windowPage
 
+    const [theme, setTheme] = useState(localStorage.getItem('theme-color') || 'light')
 
     const logoutHandler = event => {
         event.preventDefault()
@@ -40,6 +42,14 @@ export const Navbar = (props) => {
         }
     }, [auth.username]);
         
+    useEffect(()=>{
+        localStorage.setItem('theme-color', theme)
+        if(document.body.className === 'dark' && theme === 'light'){
+            document.body.className = ''
+        }else if(document.body.className === '' && theme === 'dark'){
+            document.body.className = 'dark'
+        }
+    }, [theme])
 
     // useEffect(() => {
     //     console.log("currentWindowPage: " + currentWindowPage)
@@ -50,10 +60,22 @@ export const Navbar = (props) => {
     //     }
     // }, [currentWindowPage])
 
+
+    const changeModeHandler = () => {
+        document.body.classList.toggle('dark');
+        if(theme === 'light'){
+            setTheme('dark')
+        }
+        else{
+            setTheme('light')
+        }
+        localStorage.setItem('theme-color', theme)
+    }
+
     return (
-        <nav className="navbar sticky-top navbar-light dShadow" style={{background: 'white', zIndex: 1} }>
+        <nav className="navbar sticky-top navbar-light mainNavBar dShadow">
             <div className="container-fluid">
-                <h1 className="navbar-brand" style={{fontSize: 40}}>Мордор</h1>
+                <h1 className="navbar-brand" onClick={() => history.push("/main")}>Мордор</h1>
                 <form className="d-flex">
                 {!(currentWindowPage === "/login" || currentWindowPage === "/registration") && 
                     <>
@@ -81,6 +103,21 @@ export const Navbar = (props) => {
                                 <NavLink to="/main"><i className="fa fa-home" ></i></NavLink>
                             </div>
                         }
+                        <div class="dropdown me-1">
+                            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                {/* <li><a className="dropdown-item" href="#">Action</a></li> */}
+                                <li>
+                                    <a className="dropdown-item">
+                                    <input type="checkbox" className="modeCheckBox" id="modeCheckBox" onClick={changeModeHandler}/>
+                                    <label for="modeCheckBox" className="modeLabel">{(theme === 'dark' ? "Light" : "Dark")}-Mode</label>
+                                    </a>
+                                </li>
+                                {/* <li><a className="dropdown-item" href="#">Another action</a></li>
+                                <li><a className="dropdown-item" href="#">Something else here</a></li> */}
+                            </ul>
+                            </div>
                         <div className="col mx-auto">
                             <a href="/">
                                 <button className="btn btn-outline-primary" onClick = {logoutHandler}>
@@ -96,7 +133,7 @@ export const Navbar = (props) => {
                 {!isUserAuthenticated && 
                 !(currentWindowPage === "/login" || currentWindowPage === "/registration") && <NavLink to="/login"><button className="btn btn-outline-primary"
                 >Login</button></NavLink>
-                }
+                }                
             </div>
         </nav>
     )

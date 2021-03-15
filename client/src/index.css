@@ -1,6 +1,28 @@
-/* body {
-    background: #e7e7e7;
-} */
+ /* @dark: #3e444b;
+ @light: #f8f9fa; */
+
+ :root{
+     --dark-color: #3e444b;
+     --light-color: #f8f9fa;
+     --darker-color: #1e2225;
+     --gray-500: #adb5bd;
+ }
+
+
+
+
+body {
+    background-color: var(--light-color);
+    transition: background-color 0.2s linear;
+}
+
+body.dark{
+    background-color: var(--darker-color);
+}
+
+.dark main{
+    background-color: var(--darker-color);
+}
 
 
 .cCenter {
@@ -16,16 +38,75 @@
     top: 0;
     left: 0;
     z-index: 0;
+    transition: background-color 0.2s linear;
 }
+
+.dark .cCenter {
+    background-color: var(--darker-color);
+    transition: background-color 0.2s linear;
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5{
+    color: var(--light-color);
+}
+
+.dark p{
+    color: var(--light-color);
+}
+
+.dark label{
+    color: var(--light-color)
+}
+
+.dark .navbar-brand{
+    color: var(--light-color);
+}
+
+.cCenterMainPage {
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    flex-direction: column;
+    /* position: absolute; */
+    /* width: 100vw; */
+    /* height: 100vh; */
+    padding: 15px;
+    box-sizing: border-box;
+    /* top: 0; */
+    /* left: 0; */
+    z-index: 0;
+}
+
+/* .dark .cCenterMainPage {
+    background-color: darkgray;
+} */
 
 .centeredElement{
     display: flex;
     justify-content: center;
 }
 
+.dark .centeredElement{
+    background-color: var(--darker-color);
+}
+
 .align-items-center{
     align-items: center!important;
 }
+
+.borderInTableOnUserPage{
+    border-color: black;
+    border-bottom-width: 2px;
+}
+
+.dark .borderInTableOnUserPage{
+    border-color: white;
+    border-bottom-width: 3px;
+}
+
+/* .dark .dShadow {
+    box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.2);
+} */
 
 .dShadow {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, .2);
@@ -92,6 +173,99 @@
     border-bottom: 0;
 }
 
+.mainNavBar{
+    /* style={{background: 'white', zIndex: 1} } */
+    background-color: white;
+    z-index: 1;
+    transition: background-color 0.2s linear;
+}
+
+.dark .mainNavBar{
+    /* style={{background: 'white', zIndex: 1} } */
+    background-color: var(--dark-color);
+    z-index: 1;
+    transition: background-color 0.2s linear;
+}
+
+.mainPageSection{
+    background-color: #f8f9fa;
+    transition: background-color 0.2s linear;
+}
+.dark .mainPageSection{
+    background-color: var(--darker-color);
+    text-decoration-color: var(--light-color);
+    transition: background-color 0.2s linear;
+}
+
+.userImageSection{
+    background-color: white;
+    transition: background-color 0.2s linear;
+}
+
+.avatar{
+    width: 168px;
+    margin-top: -8rem;
+    border: 3px solid var(--light-color);
+    transition: border 0.2s linear;
+    /* border-radius: 10px;
+    border-color: green; */
+}
+
+.dark .avatar{
+    border-color: var(--darker-color);
+}
+
+.dark .userImageSection{
+    background-color: var(--darker-color);
+
+}
+
+.userFanficsSection{
+    padding-top: 0.5rem;
+    background-color: var(--light-color);
+    transition: background-color 0.2s linear;
+}
+
+.dark .userFanficsSection{
+    background-color: var(--darker-color);
+}
+
+.dark .fanficListTable{ 
+    color: var(--light-color);
+}
+
+.fanficViewPageContainer{
+    transition: background-color 0.2s linear;
+}
+
+.dark .fanficViewPageContainer{
+    background-color: var(--dark-color);
+    transition: background-color 0.2s linear;
+}
+
+
+
+@media (min-width: 992px){
+    .cardFanfics{
+        width: 60rem;
+    }
+    .fa-pencil{
+        font-size: 1.25rem;
+    }
+    .fa-eye{
+        font-size: 1.25rem;
+    }
+    .fa-trash{
+        font-size: 1.25rem;
+    }
+    .chapterCardOnCreatePage{
+        width: 40rem;
+    }
+    .mainCard_CreatePage{
+        width: 60rem;
+    }
+}
+
 @media (max-width: 991px) {
     .navbar .container-fluid {
         flex-direction: column;
@@ -102,15 +276,66 @@
     .mLeft80 {
         margin-left: 0;
     }
+    .cardFanfics{
+        width: 50rem;
+    }
+    .fa-pencil {
+        font-size: 1rem;
+    }
+    .fa-eye{
+        font-size: 1rem;
+    }
+    .fa-trash{
+        font-size: 1rem;
+    }
+    .chapterCardOnCreatePage{
+        width: 35rem;
+    }
+    .mainCard_CreatePage{
+        width: 40rem;
+    }
 }
 
 @media (max-width: 830px) {
     .table {
         font-size: .7em;
     }
+    .cardFanfics{
+        width: 37rem;
+    }
+    .fa-pencil {
+        font-size: .8rem;
+    }
+    .fa-eye{
+        font-size: .8rem;
+    }
+    .fa-trash{
+        font-size: .8rem;
+    }
+    .chapterCardOnCreatePage{
+        width: 20rem;
+    }
+    .mainCard_CreatePage{
+        width: 22rem;
+    }
 }
 
-.fa{
+.dark .mainCard_CreatePage{
+    background-color: var(--dark-color);
+}
+
+.dark .chapterCardOnCreatePage{
+    background-color: var(--gray-500);
+}
+/* .dark .btn-close{
+    background-color: darkgrey;
+} */
+
+.dark .fa{
+    color: darkgrey;
+}
+
+.fa-user{
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
@@ -118,6 +343,65 @@
     font-size: 30px;
     border-radius: 7px;
     color: black;
+}
+
+.fa-home{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 30px;
+    border-radius: 7px;
+    color: black;
+}
+
+.fa-pencil{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 4px;
+    padding-right: 4px;
+    margin-right: 4px;
+    /* font-size: 1.25rem; */
+    /* border: 1px solid var(--light-color); */
+    border-radius: 5px;
+    color: black;
+}
+
+.fa-eye{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 4px;
+    padding-right: 4px;
+    margin-right: 4px;
+    /* font-size: 1.25rem; */
+    /* border: 2px solid var(--darker-color); */
+    border-radius: 5px;
+    color: black;
+}
+
+.fa-trash{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 4px;
+    padding-right: 4px;
+    /* font-size: 1.25rem; */
+    /* border: 1px solid var(--light-color); */
+    border-collapse: var(--light-color);
+    border-radius: 5px;
+
+    color: #dc3545;
+}
+
+.fa-pencil:hover{
+    background-color: gray;
+}
+
+.fa-eye:hover{
+    background-color: gray;
+}
+
+.fa-trash:hover{
+    background-color: gray;
 }
 
 .col .fa:hover{
@@ -132,8 +416,41 @@
     width: 18rem;
 }
 
+/* .dark .card{
+    background-color: var(--dark-color);
+} */
+
+
+
+.dark .dropdown-menu{
+    background-color: var(--dark-color);
+}
+
+.dark .dropdown-item:hover{
+    background-color: darkgrey;
+}
+
 .cardFanfics{
-    width: 60rem;
+    background-color: var(--light-color);
+    transition: background-color 0.2s linear;
+}
+.dark .cardFanfics{
+    background-color: var(--dark-color);
+}
+
+.cardFanficMainPage{
+    width: 30rem;
+}
+
+.dark .cardFanficMainPage{
+    background-color: var(--dark-color);
+}
+
+.modeCheckBox{
+    opacity: 0;
+    /* margin-left: 1rem; */
+    position: absolute;
+    /* justify-content: space-between; */
 }
 
 .bg-image{

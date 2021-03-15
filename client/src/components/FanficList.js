@@ -1,42 +1,26 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 import { AuthContext } from '../context/AuthContext'
 import { useHttp } from '../hooks/http.hook'
 import { useMessage } from '../hooks/message.hook'
 import { Loader } from './Loader'
 
 export const FanficList = ({ texts }) => {
+    const history = useHistory()
     const auth = useContext(AuthContext)
     const {loading, request, response} = useHttp()
     const [fanficAuthors, setFanficAuthors] = useState([])
     const message = useMessage()
 
-    const getAuthorUsername = async (text) => {
-        try {
-            console.log(text.author)
-            const data = await request(`/api/auth/user/${text.author}`, "GET", null)
-            console.log(data)   
-            return(data.username)
-            fanficAuthors.push(data.username)
-            setFanficAuthors(fanficAuthors)
-            console.log(fanficAuthors)
-        } catch (e) {
-            message(e.message)
-        } 
+    const redirectToTextViewPage = (id) => {
+        //console.log(id)
+        history.push(`/text/${id}/view`)
     }
 
-    useEffect(() => {
-        console.log(texts)
-    }, [texts])
-
-    // useEffect(() => {
-    //     getAuthorUsername()
-    //     //console.log("texts changed")
-    // }, [getAuthorUsername])
-
-    // useEffect(() => {
-    //     console.log("fanficAuthors changed")
-    //     getAuthorUsername()
-    // }, [fanficAuthors])
+    const redirectToTextEditPage = (id) => {
+        //console.log(id)
+        history.push(`/text/${id}/edit`)
+    }
 
     if(loading){
         return <Loader></Loader>
@@ -47,8 +31,8 @@ export const FanficList = ({ texts }) => {
     }
 
     return(
-        <table className="table table-hover">
-            <thead className="border-bottom border-dark">
+        <table className="table table-hover fanficListTable">
+            <thead className="border-bottom-1 borderInTableOnUserPage">
                 <tr>
                     <th scope="col">#Title</th>
                     <th scope="col">Author</th>
@@ -63,7 +47,13 @@ export const FanficList = ({ texts }) => {
                             <th scope="row">{text.title}</th>                                
                             <td>{text.author.username}</td> {/* <td>{getAuthorUsername(text)}</td> */}
                             <td>{text.date}</td>
-                            <td></td>
+                            <td>
+                                <div className="d-flex">
+                                    <i class="fa fa-pencil" onClick={text && (() => redirectToTextEditPage(text._id))}></i>
+                                    <i class="fa fa-eye" onClick={text && (() => redirectToTextViewPage(text._id))}></i>
+                                    <i class="fa fa-trash"></i>
+                                </div>
+                            </td>
                         </tr>
                     )
                 })}

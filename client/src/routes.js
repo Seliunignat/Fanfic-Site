@@ -4,8 +4,10 @@ import { UserPage } from './pages/UserPage'
 import {AuthPage} from './pages/AuthPage'
 import { SignupPage } from './pages/SignUpPage'
 import { MainPage } from './pages/MainPage'
-import { TestPage } from './pages/TestPage'
 import { CreateTextPage } from './pages/CreateTextPage'
+import { TextViewPage } from './pages/TextViewPage'
+import { TextEditPage } from './pages/TextEditPage'
+import { TestPage } from './pages/TestPage'
 
 
 export const useRoutes = isAuthenticated => {
@@ -20,10 +22,16 @@ export const useRoutes = isAuthenticated => {
                     <UserPage/>
                 </Route>
                 <Route path="/test" exact>
-                    <TestPage ></TestPage>
+                    <TestPage></TestPage>
                 </Route>
                 <Route path="/createTextPage" exact>
                     <CreateTextPage></CreateTextPage>
+                </Route>
+                <Route path="/text/:id/view">
+                    <TextViewPage />
+                </Route>
+                <Route path="/text/:id/edit">
+                    <TextEditPage />
                 </Route>
                 <Redirect to="/main"></Redirect>
             </Switch>
@@ -40,6 +48,15 @@ export const useRoutes = isAuthenticated => {
                 </Route>
                 <Route path="/main" exact>
                     <MainPage ></MainPage>
+                </Route>
+                <Route path="/test" exact>
+                    <TestPage></TestPage>
+                </Route>
+                <Route path="/user/:id">
+                    <UserPage/>
+                </Route>
+                <Route path="/text/:id/view">
+                    <TextViewPage />
                 </Route>
                 <Redirect to="/main"></Redirect>
             </Switch>

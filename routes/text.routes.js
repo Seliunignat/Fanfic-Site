@@ -43,13 +43,25 @@ router.get('/', auth, async(req, res) => {
     }
 })
 
-router.get('/:id', auth, async(req, res) => {
+router.get('/latest', async (req, res) => {
     try {
-        const text = await Text.findById(req.params.id) // ???
+        const texts = await Text.find({}).sort({date: -1}).limit(10)
+        res.json(texts)
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+    }
+})
+
+router.get('/:id', async(req, res) => {
+    try {
+        const text = await Text.findById(req.params.id).populate('author') // ???
         res.json(text)
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
 })
+
+
+
 
 module.exports = router 
