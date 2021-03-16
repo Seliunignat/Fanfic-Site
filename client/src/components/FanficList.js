@@ -46,12 +46,12 @@ export const FanficList = ({ texts }) => {
                         <tr>
                             <th scope="row">{text.title}</th>                                
                             <td>{text.author.username}</td> {/* <td>{getAuthorUsername(text)}</td> */}
-                            <td>{text.date}</td>
+                            <td>{new Date(text.date).toLocaleString()}</td>
                             <td>
                                 <div className="d-flex">
-                                    <i class="fa fa-pencil" onClick={text && (() => redirectToTextEditPage(text._id))}></i>
-                                    <i class="fa fa-eye" onClick={text && (() => redirectToTextViewPage(text._id))}></i>
-                                    <i class="fa fa-trash"></i>
+                                    <i class="fa fa-pencil fanficlist" onClick={text && (() => redirectToTextEditPage(text._id))}></i>
+                                    <i class="fa fa-eye fanficlist" onClick={text && (() => redirectToTextViewPage(text._id))}></i>
+                                    <i class="fa fa-trash fanficlist"></i>
                                 </div>
                             </td>
                         </tr>

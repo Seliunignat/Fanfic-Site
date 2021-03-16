@@ -11,11 +11,10 @@ export const CreateTextPage = () => {
   const auth = useContext(AuthContext);
   const history = useHistory();
   const { loading, request, error, clearError } = useHttp();
-  const [textTitle, setTextTitle] = useState("");
   const [numberOfChapters, setNumberOfChapters] = useState(0);
   const [chapters, setChapters] = useState([]);
   const theme = localStorage.getItem("theme-color");
-  //const [ourChapters, setOurChapters] = useState([])
+  
   const [form, setForm] = useState({
     title: "",
     author: auth.userId,
@@ -43,6 +42,10 @@ export const CreateTextPage = () => {
   const redirectToUserPage = () => {
     history.push("/user");
   };
+  
+  const goBackHandler = () => {
+    history.goBack()
+  }
 
   const changeChapterHandler = (event) => {
     //console.log("changeChapterTitleHandler: " + event.target.name)
@@ -323,7 +326,7 @@ export const CreateTextPage = () => {
             <div className="d-flex justify-content-end mt-1">
               <button
                 className="btn btn-outline-primary me-1"
-                onClick={redirectToUserPage}
+                onClick={(goBackHandler)}
               >
                 Cancel
               </button>

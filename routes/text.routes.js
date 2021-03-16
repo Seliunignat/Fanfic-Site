@@ -5,6 +5,24 @@ const auth = require('../middleware/auth.middleware')
 const {check, validationResult} = require('express-validator')
 const router = Router()
 
+router.post('/update/:id', auth, async (req, res) =>{
+    try {
+        //console.log("try to find text")
+        const findedText = await Text.findOne({_id: req.params.id})
+        // console.log(findedText)
+        // console.log(req.body.text)
+        const text = req.body.text
+        if(req.body.text){
+            await Text.updateOne({_id: req.params.id}, {$set : {title: text.title, chapters: text.chapters}})
+            // findedText.title = req.body.text.title
+        }
+        //console.log("try to save")
+        res.status(201).json({message: 'Фанфик успешно отредактирован' })
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+    }
+})
+
 router.post('/create', 
 [
     check('title', 'Минимальная длина названия - 1 символ').isLength({min: 1}),
@@ -60,6 +78,8 @@ router.get('/:id', async(req, res) => {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
 })
+
+
 
 
 

@@ -14,6 +14,7 @@
 body {
     background-color: var(--light-color);
     transition: background-color 0.2s linear;
+    position: relative;
 }
 
 body.dark{
@@ -332,7 +333,7 @@ body.dark{
 } */
 
 .dark .fa{
-    color: darkgrey;
+    color: var(--light-color);
 }
 
 .fa-user{
@@ -392,7 +393,9 @@ body.dark{
     color: #dc3545;
 }
 
-.fa-pencil:hover{
+
+
+.fa.fa-pencil.fanficlist:hover{
     background-color: gray;
 }
 
@@ -402,6 +405,14 @@ body.dark{
 
 .fa-trash:hover{
     background-color: gray;
+}
+
+.fa.fa-pencil.editPencilOnViewPage{
+    color: var(--light-color);
+}
+
+.fa.fa-pencil.editPencilOnViewPage:hover{
+    background-color: 0;
 }
 
 .col .fa:hover{
@@ -444,6 +455,13 @@ body.dark{
 
 .dark .cardFanficMainPage{
     background-color: var(--dark-color);
+}
+
+.cardOnTextViewPage{
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+    /* max-height: 400px; */
 }
 
 .modeCheckBox{

@@ -13,7 +13,7 @@ export const UserPage = () => {
     const message = useMessage();
     const { loading, request, error, clearError } = useHttp()
     const [texts, setTexts] = useState([])
-
+    const theme = localStorage.getItem("theme-color");
 
     // const checkUserStatus = async () => {
     //     try {
@@ -102,7 +102,7 @@ export const UserPage = () => {
                             <div className="border-bottom d-flex justify-content-center">
                                 <div></div>
                                 <h1 className="text-center">My Fanfics</h1> 
-                                <button className="btn btn-dark ms-5 w-auto my-auto" onClick={redirectToCreateTextPage}>Create new</button>
+                                {theme === 'dark' ? <button className="btn btn-light ms-5 w-auto my-auto" onClick={redirectToCreateTextPage}>Create new</button> : <button className="btn btn-dark ms-5 w-auto my-auto" onClick={redirectToCreateTextPage}>Create new</button>}
                             </div>   
                             <div className="container">
                                 {!loading &&
