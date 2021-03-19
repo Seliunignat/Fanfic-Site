@@ -36,7 +36,7 @@ export const MainPage = () => {
         {!loading && 
             <>
             <Navbar windowPage={"/main"}></Navbar>
-            <div className="mainPageSection">
+            <div className="mainPageSection" >
                 {/* <h1>Main Page</h1>
                 <button className="btn btn-primary">Action</button> */}
                 <section className="cCenterMainPage">

@@ -20,7 +20,7 @@ function App() {
     }
 
     return (
-      <AuthContext.Provider value={{token, login, logout, userId, isAuthenticated, username}}>
+      <AuthContext.Provider value={{token, login, logout, userId, isAuthenticated, isBanned, username}}>
         <Router>
           {/* <Navbar isAuthenticated={isAuthenticated}></Navbar> */}
           <>

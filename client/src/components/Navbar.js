@@ -4,17 +4,28 @@ import {NavLink, Redirect, Route, Switch, useHistory} from 'react-router-dom'
 import {AuthPage} from '../pages/AuthPage'
 import { useAuth } from '../hooks/auth.hook'
 import { set } from 'mongoose'
+import { useMessage } from '../hooks/message.hook'
 
 export const Navbar = (props) => {
     const history = useHistory()
+    const message = useMessage()
     
     const [currentUserName, setCurrentUserName] = useState(null)
 
     const auth = useContext(AuthContext)
+    const useauth = useAuth()
     const isUserAuthenticated = !!auth.token
     const currentWindowPage = props.windowPage
 
     const [theme, setTheme] = useState(localStorage.getItem('theme-color') || 'light')
+
+    // console.log(auth)
+
+    if(auth && auth.isBanned){
+        console.log("isBanned: " + auth.isBanned)
+        message("Вы были ЗАБАНЕНЫ!")
+        auth.logout()
+    }
 
     const logoutHandler = event => {
         event.preventDefault()

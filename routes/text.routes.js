@@ -6,24 +6,6 @@ const {check, validationResult} = require('express-validator')
 const User = require('../models/User')
 const router = Router()
 
-router.post('/update/:id', auth, async (req, res) =>{
-    try {
-        //console.log("try to find text")
-        const findedText = await Text.findOne({_id: req.params.id})
-        // console.log(findedText)
-        // console.log(req.body.text)
-        const text = req.body.text
-        if(req.body.text){
-            await Text.updateOne({_id: req.params.id}, {$set : {title: text.title, summary: text.summary, chapters: text.chapters, lastUpdate: new Date(Date.now())}})
-            // findedText.title = req.body.text.title
-        }
-        //console.log("try to save")
-        res.status(201).json({message: 'Фанфик успешно отредактирован' })
-    } catch (e) {
-        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
-    }
-})
-
 router.post('/create', 
 [
     check('title', 'Минимальная длина названия - 1 символ').isLength({min: 1}),
@@ -54,6 +36,24 @@ async(req, res) => {
 
         res.status(201).json({message: 'Фанфик успешно создан' })
 
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+    }
+})
+
+router.post('/update/:id', auth, async (req, res) =>{
+    try {
+        //console.log("try to find text")
+        const findedText = await Text.findOne({_id: req.params.id})
+        // console.log(findedText)
+        // console.log(req.body.text)
+        const {title, summary, chapters} = req.body
+        if(req.body){
+            await Text.updateOne({_id: req.params.id}, {$set : {title: title, summary: summary, chapters: chapters, lastUpdate: new Date(Date.now())}})
+            // findedText.title = req.body.text.title
+        }
+        //console.log("try to save")
+        res.status(201).json({message: 'Фанфик успешно отредактирован' })
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
@@ -142,17 +142,34 @@ router.get(`/getUserTexts/:id`, async(req, res) => {
     }
 })
 
+router.post('/updateChapterLikesInText/:id', auth, async(req, res) => {
+    try {
+        const {chapter} = req.body
+        const text = await Text.findById(req.params.id)
+
+        //console.log(text)
+
+        text.chapters.find(element => element._id == chapter._id).likes = chapter.likes
+
+        //console.log(text.chapters)
+
+        await Text.updateOne({_id: req.params.id}, {$set : {chapters: text.chapters}})
+
+        res.json({message: 'Данные главы обновлены'})
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+    }
+})
+
 router.delete('/delete/:id', async (req, res) => {
     try {
-        console.log("try to delete")
+        //console.log("try to delete")
         await Text.remove({_id: req.params.id})
         res.json({message: "Успешно удалено"})
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
 })
-
-
 
 
 module.exports = router 

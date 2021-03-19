@@ -5,7 +5,13 @@ export const useHttp = () => {
     const [error, setError] = useState(null)
 
     const request = useCallback(async (url, method = 'GET', body = null, headers = {}) =>{
-        setLoading(true)
+        // console.log(url)
+        if(url.includes("/api/text/updateChapterLikesInText/") || url.includes("/api/text/setRateValueOnText/")) {
+            // console.log("Now is updating likes")
+        }else{
+            setLoading(true)
+        }
+        
         try {
             if(body){
                 body = JSON.stringify(body)

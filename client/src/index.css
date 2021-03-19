@@ -8,6 +8,8 @@
      --darker-color: #1e2225;
      --gray-500: #adb5bd;
      --light-gray: #edeef0;
+     --red-500: #dc3545;
+     --blue-500: #0d6efd;
  }
 
 
@@ -264,10 +266,49 @@ body.dark{
 
 .scrollspyChapters{
     position: relative;
-    min-height: 7rem;
-    max-height: 25rem;
+    /* min-height: 15rem; */
+    /* max-height: 25rem; */
+    height: 20rem;
     margin-top: .5rem;
-    overflow-y: scroll;
+    overflow-y: auto;
+}
+
+.likeButtonOnTextView{
+    
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 3px;
+    background-color: var(--light-color-hover);
+}
+
+.likeButtonOnTextView:hover{
+    /* background-color: rgb(255, 194, 194);   */
+    background-color: #c5dcff;
+}
+
+.heartSvgContainer{
+    width: 27px;
+    display: flex;
+}
+
+.heartSvgContainer path{
+    fill: transparent;
+    stroke-width: 30;
+    stroke: var(--blue-500);
+}
+
+.likeButtonOnTextView:hover .heartSvgContainer path{
+    fill: var(--blue-500);
+    stroke-width: 30;
+    stroke: var(--blue-500);
+}
+
+.likeButtonOnTextView .heartSvgContainer.active path{
+    fill: var(--blue-500);
+    stroke-width: 30;
+    stroke: var(--blue-500);
 }
 
 @media (min-width: 992px){

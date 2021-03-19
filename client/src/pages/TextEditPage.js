@@ -66,8 +66,10 @@ export const TextEditPage = () => {
   useEffect(() => {
     // console.log(numberOfChapters);
     //console.log(chapters);
+    //console.log(text)
+    //if(text) {text.chapters = chapters}
     //console.log(summary)
-  }, [chapters, numberOfChapters, summary]);
+  }, [chapters, numberOfChapters, summary, text]);
 
   const redirectToUserPage = () => {
     history.push("/user");
@@ -115,7 +117,7 @@ export const TextEditPage = () => {
       const data_req = await request(
         `/api/text/update/${text._id}`,
         "POST",
-        { text },
+        { title: text.title, summary: summary, chapters: chapters },
         { Authorization: `Bearer ${auth.token}` }
       );
       message(data_req.message);

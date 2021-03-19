@@ -126,7 +126,7 @@ export const FanficList = (props) => {
                     <th scope="row">{text.title}</th>
                     <td>{text.author.username}</td>{" "}
                     {/* <td>{getAuthorUsername(text)}</td> */}
-                    <td>{new Date(text.date).toLocaleString()}</td>
+                    <td>{new Date(text.date).toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})}</td>
                     <td>
                       <div className="d-flex">
                         {user && ((auth.username === user.username) || isCurrentUserAdmin) && (

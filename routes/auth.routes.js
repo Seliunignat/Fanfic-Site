@@ -73,6 +73,12 @@ router.post(
             return res.status(400).json({message: 'Пользователь не найден'})
         }
 
+        // console.log(user)
+
+        if(user.isBanned){
+            res.status(405).json({message: "Пользователь забанен"})
+        }
+
         const isMatch = await bcrypt.compare(password, user.password)
 
         if(!isMatch){
@@ -85,7 +91,7 @@ router.post(
             {expiresIn: '1h'}
         )
 
-        res.json({token, userId: user.id, username: user.username})
+        res.json({token, userId: user.id, username: user.username, isBanned: user.isBanned})
 
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
