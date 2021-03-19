@@ -13,6 +13,7 @@ export const CreateTextPage = () => {
   const { loading, request, error, clearError } = useHttp();
   const [numberOfChapters, setNumberOfChapters] = useState(0);
   const [chapters, setChapters] = useState([]);
+  const [summary, setSummary] = useState("")
   const theme = localStorage.getItem("theme-color");
   
   const [form, setForm] = useState({
@@ -36,8 +37,8 @@ export const CreateTextPage = () => {
 
   useEffect(() => {
     // console.log(numberOfChapters);
-    console.log(chapters);
-  }, [chapters, numberOfChapters]);
+    // console.log(chapters);
+  }, [chapters, numberOfChapters, summary]);
 
   const redirectToUserPage = () => {
     history.push("/user");
@@ -71,6 +72,10 @@ export const CreateTextPage = () => {
     setForm({ ...form, [event.target.name]: event.target.value });
   };
 
+  const changeSummaryhandler = (event) => {
+    setSummary(event.target.value)
+  };
+
   useEffect(() => {
     console.log("Error", error);
     message(error);
@@ -82,7 +87,7 @@ export const CreateTextPage = () => {
       const data_req = await request(
         "/api/text/create",
         "POST",
-        { title: form.title, author: auth.userId, chapters: chapters },
+        { title: form.title, summary: summary, author: auth.userId, chapters: chapters },
         { Authorization: `Bearer ${auth.token}` }
       );
       console.log(data);
@@ -142,6 +147,23 @@ export const CreateTextPage = () => {
                   required={true}
                   onChange={changeHandler}
                 ></input>
+              </div>
+            </div>
+            <div className="container ">
+              <div className="d-flex justify-content-center mb-3">
+                <h5 style={{ marginTop: "0.45rem", marginRight: "0.5rem" }}>
+                  Summary:{" "}
+                </h5>
+                <textarea
+                  className="form-control"
+                  id="summary"
+                  name="summary"
+                  type="text"
+                  placeholder="Summary"
+                  style={{width: '30rem', minHeight: '3rem', maxHeight: '7rem', minWidth: '10rem', maxWidth: '30rem'}}
+                  required={true}
+                  onChange={changeSummaryhandler}
+                ></textarea>
               </div>
             </div>
             <div className="d-flex justify-content-start ms-5 mb-3">

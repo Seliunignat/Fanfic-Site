@@ -37,8 +37,8 @@ export const MainPage = () => {
             <>
             <Navbar windowPage={"/main"}></Navbar>
             <div className="mainPageSection">
-                <h1>Main Page</h1>
-                <button className="btn btn-primary">Action</button>
+                {/* <h1>Main Page</h1>
+                <button className="btn btn-primary">Action</button> */}
                 <section className="cCenterMainPage">
                     {texts && texts.map((text, index) => {
                         return(<FanficCardOnMainPage text={text}></FanficCardOnMainPage>)

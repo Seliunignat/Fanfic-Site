@@ -4,15 +4,17 @@
  :root{
      --dark-color: #3e444b;
      --light-color: #f8f9fa;
+     --light-color-hover: #ebedf1;
      --darker-color: #1e2225;
      --gray-500: #adb5bd;
+     --light-gray: #edeef0;
  }
 
 
 
 
 body {
-    background-color: var(--light-color);
+    background-color: var(--light-gray);
     transition: background-color 0.2s linear;
     position: relative;
 }
@@ -47,7 +49,7 @@ body.dark{
     transition: background-color 0.2s linear;
 }
 
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5{
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark span{
     color: var(--light-color);
 }
 
@@ -65,7 +67,6 @@ body.dark{
 
 .cCenterMainPage {
     display: flex;
-    /* justify-content: center; */
     align-items: center;
     flex-direction: column;
     /* position: absolute; */
@@ -73,14 +74,15 @@ body.dark{
     /* height: 100vh; */
     padding: 15px;
     box-sizing: border-box;
-    /* top: 0; */
-    /* left: 0; */
+    /* background: url(https://image.freepik.com/free-vector/soft-blue-gradients-color-background_43969-1038.jpg) no-repeat; */
+    background-color: var(--light-gray);
+    transition: background-color 0.2s linear;
     z-index: 0;
 }
 
-/* .dark .cCenterMainPage {
-    background-color: darkgray;
-} */
+.dark .cCenterMainPage {
+    background-color: var(--darker-color);
+}
 
 .centeredElement{
     display: flex;
@@ -216,6 +218,22 @@ body.dark{
     border-color: var(--darker-color);
 }
 
+.userAvatarUsernameOnFanficCard{
+    opacity: 0.85;
+    cursor: pointer;
+    /* border-radius: 30px; */
+}
+
+.userAvatarUsernameOnFanficCard:hover{
+    opacity: 1;
+    background: var(--light-color-hover);
+}
+
+.dark .userAvatarUsernameOnFanficCard:hover{
+    opacity: 1;
+    background: var(--gray-500);
+}
+
 .dark .userImageSection{
     background-color: var(--darker-color);
 
@@ -223,7 +241,7 @@ body.dark{
 
 .userFanficsSection{
     padding-top: 0.5rem;
-    background-color: var(--light-color);
+    background-color: var(--light-gray);
     transition: background-color 0.2s linear;
 }
 
@@ -244,7 +262,13 @@ body.dark{
     transition: background-color 0.2s linear;
 }
 
-
+.scrollspyChapters{
+    position: relative;
+    min-height: 7rem;
+    max-height: 25rem;
+    margin-top: .5rem;
+    overflow-y: scroll;
+}
 
 @media (min-width: 992px){
     .cardFanfics{
@@ -450,7 +474,7 @@ body.dark{
 }
 
 .cardFanficMainPage{
-    width: 30rem;
+    width: 35rem;
 }
 
 .dark .cardFanficMainPage{

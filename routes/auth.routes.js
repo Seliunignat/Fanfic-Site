@@ -80,7 +80,7 @@ router.post(
         }
 
         const token = jwt.sign(
-            {userId: user.id }, 
+            {userId: user.id, isAdmin: user.isAdmin}, 
             config.get('jwtSecret'),
             {expiresIn: '1h'}
         )
@@ -95,11 +95,12 @@ router.post(
 
 router.get("/user/:id", async(req, res) => {
     try {
-        const user = await User.findOne({_id: req.params.id})
+        const user = await User.findOne({_id: req.params.id}).populate('texts')
         if(!user){
             return res.status(400).json({message: 'Пользователь не найден'})
         }
-    res.json({userId: user.id, username: user.username})
+        // res.json({userId: user.id, username: user.username, email: user.email, isBanned: user.isBanned, isAdmin: user.isAdmin, avatar: user.avatar, texts: user.texts})
+        res.json(user)
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
         console.log('Error: ' + e.message)

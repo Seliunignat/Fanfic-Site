@@ -94,7 +94,7 @@ export const Navbar = (props) => {
                                     <h5 className="mt-2 me-1">{currentUserName}</h5>                                    
                                 </div>
                                 <div className="col me-2">
-                                    <NavLink to="/user"><i className="fa fa-user" ></i></NavLink>
+                                    <NavLink to={`/user/${auth.userId}`}><i className="fa fa-user" ></i></NavLink>
                                 </div>
                             </>
                         }

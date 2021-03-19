@@ -7,24 +7,27 @@ export const useAuth = () => {
     const [userId, setUserId] = useState(null)
     const [email, setEmail] = useState(null)
     const [isBanned, setIsBanned] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(false)
     const [username, setUsername] = useState(null)
     const [ready, setReady] = useState(false)
 
 
 
-    const login = useCallback( (jwtToken, id, username, email, isBanned) => {
+    const login = useCallback( (jwtToken, id, username, email, isBanned, isAdmin) => {
         setToken(jwtToken)
         setUserId(id)
         setUsername(username)
         setEmail(email)
         setIsBanned(isBanned)
+        setIsAdmin(isAdmin)
 
         localStorage.setItem(storageName, JSON.stringify({
             token: jwtToken,
             userId: id, 
             username: username,
             email: email,
-            isBanned: isBanned
+            isBanned: isBanned,
+            isAdmin: isAdmin
         }))
     },[])
 
