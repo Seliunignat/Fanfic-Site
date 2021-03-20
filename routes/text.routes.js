@@ -24,9 +24,11 @@ async(req, res) => {
 
         const text = Text({title, summary, author, date, chapters})
 
+        // console.log("text: " + text)
+
         const savedText = await text.save()
 
-        //console.log(savedText)
+        // console.log("savedText: " + savedText)
         const userTexts = (await User.find({_id: author}))[0].texts
         //console.log(userTexts)
 
@@ -37,6 +39,7 @@ async(req, res) => {
         res.status(201).json({message: 'Фанфик успешно создан' })
 
     } catch (e) {
+        console.log(e.message)
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
 })

@@ -1,6 +1,7 @@
 import { data } from "jquery";
 import React, { useContext, useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { FiCornerDownLeft } from "react-icons/fi";
 import { useHistory } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { useHttp } from "../hooks/http.hook";
@@ -12,10 +13,12 @@ export const CreateTextPage = () => {
   const history = useHistory();
   const { loading, request, error, clearError } = useHttp();
   const [numberOfChapters, setNumberOfChapters] = useState(0);
+  const [chpatersImages, setChaptersImages] = useState([]);
   const [chapters, setChapters] = useState([]);
-  const [summary, setSummary] = useState("")
+  const [summary, setSummary] = useState("");
+  const [imageLoading, setImageLoading] = useState(false);
   const theme = localStorage.getItem("theme-color");
-  
+
   const [form, setForm] = useState({
     title: "",
     author: auth.userId,
@@ -28,25 +31,50 @@ export const CreateTextPage = () => {
       id: numberOfChapters,
       chapterTitle: "",
       chapterContent: "",
+      chapterImage: null,
       order: 0,
-      likes: 0,
+      likes: [],
     });
-    setChapters(chapters);
+    console.log(chapters);
+    chpatersImages.push(null);
+    setChaptersImages(
+      chpatersImages.map((chapterImage) => {
+        return chapterImage;
+      })
+    );
+    setChapters(
+      chapters.map((chapter) => {
+        return chapter;
+      })
+    );
     setNumberOfChapters(chapters.length);
   };
 
   useEffect(() => {
     // console.log(numberOfChapters);
     // console.log(chapters);
-  }, [chapters, numberOfChapters, summary]);
+    setChaptersImages(
+      chapters.map((chapter) => {
+        return chapter.chapterImage;
+      })
+    );
+  }, [chapters, numberOfChapters]);
+
+  useEffect(() => {}, [summary]);
+
+  useEffect(() => {
+    console.log("chpatersImages: ");
+    console.log(chpatersImages);
+    console.log(chapters);
+  }, [chpatersImages]);
 
   const redirectToUserPage = () => {
     history.push("/user");
   };
-  
+
   const goBackHandler = () => {
-    history.goBack()
-  }
+    history.goBack();
+  };
 
   const changeChapterHandler = (event) => {
     //console.log("changeChapterTitleHandler: " + event.target.name)
@@ -73,7 +101,7 @@ export const CreateTextPage = () => {
   };
 
   const changeSummaryhandler = (event) => {
-    setSummary(event.target.value)
+    setSummary(event.target.value);
   };
 
   useEffect(() => {
@@ -87,7 +115,12 @@ export const CreateTextPage = () => {
       const data_req = await request(
         "/api/text/create",
         "POST",
-        { title: form.title, summary: summary, author: auth.userId, chapters: chapters },
+        {
+          title: form.title,
+          summary: summary,
+          author: auth.userId,
+          chapters: chapters,
+        },
         { Authorization: `Bearer ${auth.token}` }
       );
       console.log(data);
@@ -107,6 +140,83 @@ export const CreateTextPage = () => {
       })
     );
   };
+
+  const addImagetoChapterHandler = (props) => {
+    const { event, index } = props;
+    const file = event.target.files[0];
+    console.log("index: " + index);
+    console.log("event.files[0]: ");
+    console.log(event.target.files[0]);
+
+    uploadImage(file, index);
+
+    // console.log("URLOfUploadedImage: " + URLOfUploadedImage);
+  };
+
+  const uploadImage = async (file, index) => {
+    if (file) {
+      try {
+        console.log(file);
+        const data = new FormData();
+        data.append("file", file);
+        data.append("upload_preset", "fanficSiteImages");
+
+        // console.log(data.getAll('file'))
+
+        // const jsonedData = JSON.stringify(data)
+
+        // console.log(jsonedData)
+
+        // const reader = new FileReader()
+        // reader.readAsDataURL(file)
+        // reader.onloadend = () => {
+        //    console.log(reader.result)
+        // }
+
+        //const data = reader.result
+
+        // console.log(JSON.stringify(reader.result))
+
+        console.log(data);
+
+        // const upload = await request('/api/image/uploadChapterImage', 'POST', )
+        setImageLoading(true)
+
+        const response = await fetch(
+          "https://api.cloudinary.com/v1_1/ignatcloud/image/upload",
+          {
+            method: "POST",
+            body: data,
+          }
+        );
+
+        const upload = await response.json();
+
+        setImageLoading(false)
+
+        console.log(upload.secure_url);
+
+        chpatersImages[index] = upload.secure_url;
+        setChaptersImages(
+          chpatersImages.map((chapterImage) => {
+            return chapterImage;
+          })
+        );
+
+        setChapters(chapters.map((chapter, index) => {
+          chapter.chapterImage = chpatersImages[index]
+          return chapter
+        }))
+
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log("imageLoading: " + imageLoading)
+  }, [imageLoading])
 
   return (
     <DragDropContext
@@ -160,7 +270,13 @@ export const CreateTextPage = () => {
                   name="summary"
                   type="text"
                   placeholder="Summary"
-                  style={{width: '30rem', minHeight: '3rem', maxHeight: '7rem', minWidth: '10rem', maxWidth: '30rem'}}
+                  style={{
+                    width: "30rem",
+                    minHeight: "3rem",
+                    maxHeight: "7rem",
+                    minWidth: "10rem",
+                    maxWidth: "30rem",
+                  }}
                   required={true}
                   onChange={changeSummaryhandler}
                 ></textarea>
@@ -194,9 +310,6 @@ export const CreateTextPage = () => {
                             <div
                               className="accordion"
                               id={"chapter" + (index + 1)}
-                              style={{
-                                width: "40rem",
-                              }}
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
@@ -206,76 +319,96 @@ export const CreateTextPage = () => {
                                   className="accordion-header"
                                   id={"heading" + (index + 1)}
                                 >
-                                  <div className="d-flex">
-                                    <div className="card chapterCardOnCreatePage py-2 ps-3 mb-1">
-                                      <div className="d-flex justify-content-between">
-                                        <div className="d-flex">
-                                          <h6 className="pt-2">
-                                            Глава {index + 1}:{" "}
-                                          </h6>
-                                          <input
-                                            className="form-control "
-                                            id={"chapterTitle" + (index + 1)}
-                                            name={"chapterTitle" + (index + 1)}
-                                            type="text"
-                                            placeholder="Title"
-                                            style={{
-                                              width: "18rem",
-                                              marginLeft: "1rem",
-                                              height: "2.5rem",
-                                            }}
-                                            // required={true}
-                                            onChange={changeChapterHandler}
-                                            value={
-                                              chapter.chapterTitle &&
-                                              chapter.chapterTitle
+                                  <div className="d-flex justify-content-between">
+                                    <div className="d-flex">
+                                      <div className="card chapterCardOnCreatePage py-2 ps-3 mb-1">
+                                        <div className="d-flex justify-content-between">
+                                          <div className="d-flex">
+                                            <h6 className="pt-2">
+                                              Глава {index + 1}:{" "}
+                                            </h6>
+                                            <input
+                                              className="form-control "
+                                              id={"chapterTitle" + (index + 1)}
+                                              name={
+                                                "chapterTitle" + (index + 1)
+                                              }
+                                              type="text"
+                                              placeholder="Title"
+                                              style={{
+                                                width: "18rem",
+                                                marginLeft: "1rem",
+                                                height: "2.5rem",
+                                              }}
+                                              // required={true}
+                                              onChange={changeChapterHandler}
+                                              value={
+                                                chapter.chapterTitle &&
+                                                chapter.chapterTitle
+                                              }
+                                            ></input>
+                                          </div>
+                                          <button
+                                            className="accordion-button collapsed rounded-circle me-2 d-flex justify-content-center"
+                                            type="button"
+                                            draggable={true}
+                                            data-bs-toggle="collapse"
+                                            data-bs-target={
+                                              "#collapse" + (index + 1)
                                             }
-                                          ></input>
+                                            aria-expanded="false"
+                                            aria-controls={
+                                              "collapse" + (index + 1)
+                                            }
+                                            style={{
+                                              width: "2.5rem",
+                                              height: "2.5rem",
+                                              border: "none",
+                                              alignContent: "center",
+                                            }}
+                                          ></button>
                                         </div>
-                                        <button
-                                          className="accordion-button collapsed rounded-circle me-2 d-flex justify-content-center"
-                                          type="button"
-                                          draggable={true}
-                                          data-bs-toggle="collapse"
-                                          data-bs-target={
-                                            "#collapse" + (index + 1)
-                                          }
-                                          aria-expanded="false"
-                                          aria-controls={
-                                            "collapse" + (index + 1)
-                                          }
-                                          style={{
-                                            width: "2.5rem",
-                                            height: "2.5rem",
-                                            border: "none",
-                                            alignContent: "center",
-                                          }}
-                                        ></button>
                                       </div>
+                                      {theme === "dark" ? (
+                                        <button
+                                          type="button"
+                                          class="btn-close btn-close-white my-auto ms-2"
+                                          aria-label="Close"
+                                          onClick={
+                                            chapter &&
+                                            (() =>
+                                              deleteChapterButtonHandler(index))
+                                          }
+                                        ></button>
+                                      ) : (
+                                        <button
+                                          type="button"
+                                          class="btn-close my-auto ms-2"
+                                          aria-label="Close"
+                                          onClick={
+                                            chapter &&
+                                            (() =>
+                                              deleteChapterButtonHandler(index))
+                                          }
+                                        ></button>
+                                      )}
                                     </div>
-                                    {theme === "dark" ? (
-                                      <button
-                                        type="button"
-                                        class="btn-close btn-close-white my-auto ms-2"
-                                        aria-label="Close"
-                                        onClick={
-                                          chapter &&
-                                          (() =>
-                                            deleteChapterButtonHandler(index))
-                                        }
-                                      ></button>
-                                    ) : (
-                                      <button
-                                        type="button"
-                                        class="btn-close my-auto ms-2"
-                                        aria-label="Close"
-                                        onClick={
-                                          chapter &&
-                                          (() =>
-                                            deleteChapterButtonHandler(index))
-                                        }
-                                      ></button>
-                                    )}
+                                    {chapter &&
+                                      (chapter.chapterImage == null ? (
+                                        <input
+                                          className="my-auto"
+                                          id={`chapterImage${index + 1}`}
+                                          type="file"
+                                          onChange={(e) =>
+                                            addImagetoChapterHandler({
+                                              index,
+                                              event: e,
+                                            })
+                                          }
+                                        ></input>
+                                      ) : (
+                                        "Loaded"
+                                      ))}
                                   </div>
                                 </div>
                                 <div
@@ -310,37 +443,13 @@ export const CreateTextPage = () => {
                                     ></textarea>
                                   </div>
                                 </div>
-                                {/* <div
-                                  id={"collapse" + (index + 1)}
-                                  className="accordion-collapse collapse"
-                                  aria-labelledby={"heading" + (index + 1)}
-                                  data-bs-parent={
-                                    "#chaptersAccordion" + (index + 1)
-                                  }
-                                >
-                                  <div className="accordion-body">
-                                    <textarea
-                                      id={"chapterContent" + (index + 1)}
-                                      name={"chapterContent" + (index + 1)}
-                                      className="form-control"
-                                      type="text"
-                                      onChange={changeChapterHandler}
-                                      style={{
-                                        width: "40rem",
-                                        marginLeft: "-1.4rem",
-                                        marginTop: "-1rem",
-                                        marginBottom: "-1rem",
-                                      }}
-                                    ></textarea>
-                                  </div>
-                                </div> */}
                               </div>
                             </div>
                           )}
                         </Draggable>
                       );
                     })}
-                    {provided.placeholder}
+                  {provided.placeholder}
                 </div>
               )}
             </Droppable>
@@ -348,7 +457,7 @@ export const CreateTextPage = () => {
             <div className="d-flex justify-content-end mt-1">
               <button
                 className="btn btn-outline-primary me-1"
-                onClick={(goBackHandler)}
+                onClick={goBackHandler}
               >
                 Cancel
               </button>
