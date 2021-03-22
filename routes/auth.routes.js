@@ -99,6 +99,32 @@ router.post(
     }   
 })
 
+router.post('/updateAvatar/:id', auth, async(req, res) => {
+    try {
+        const userId = req.params.id
+        var url = String(req.body.url)
+
+        //console.log("userId: " + userId)
+        //console.log("url: " + url)
+
+        const urlTemplate = 'https://res.cloudinary.com/ignatcloud/image/upload'
+
+        //console.log(urlTemplate.length)
+
+        const params = '/w_1080,ar_1:1,c_fill,g_auto'
+
+        url = url.replace(urlTemplate, urlTemplate+params)
+        
+        //console.log("url: " + url)
+
+        await User.updateOne({_id: userId}, {$set : {avatar: url}})
+
+        res.json({message: "Аватар пользователя обновлен"})
+    } catch (e) {
+        
+    }
+})
+
 router.get("/user/:id", async(req, res) => {
     try {
         const user = await User.findOne({_id: req.params.id}).populate('texts')

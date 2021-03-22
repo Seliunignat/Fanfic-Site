@@ -16,14 +16,14 @@ export const TextEditPage = () => {
   const theme = localStorage.getItem("theme-color");
   const [text, setText] = useState(null);
   const [textTitle, setTextTitle] = useState("");
-  const [summary, setSummary] = useState("")
+  const [summary, setSummary] = useState("");
   const textId = useParams().id;
 
   var isCurrentUserAdmin = false;
-  if(auth.token){
-    const jwt = require('jsonwebtoken')
-    const dataFromToken = jwt.verify(auth.token, "ignat fanfic site")
-    isCurrentUserAdmin = dataFromToken.isAdmin
+  if (auth.token) {
+    const jwt = require("jsonwebtoken");
+    const dataFromToken = jwt.verify(auth.token, "ignat fanfic site");
+    isCurrentUserAdmin = dataFromToken.isAdmin;
   }
 
   const getText = useCallback(async () => {
@@ -33,7 +33,7 @@ export const TextEditPage = () => {
       setTextTitle(fetched.title);
       setChapters(fetched.chapters);
       setNumberOfChapters(fetched.chapters.length);
-      setSummary(fetched.summary)
+      setSummary(fetched.summary);
     } catch (e) {}
   }, [textId, request]);
 
@@ -106,11 +106,10 @@ export const TextEditPage = () => {
   };
 
   const changeSummaryhandler = (event) => {
-    text.summary = event.target.value
-    console.log(text.summary)
-    setSummary(text.summary)
+    text.summary = event.target.value;
+    console.log(text.summary);
+    setSummary(text.summary);
   };
-
 
   const saveChangesHandler = async () => {
     try {
@@ -129,7 +128,6 @@ export const TextEditPage = () => {
     }
   };
 
-  
   const deleteChapterButtonHandler = (index) => {
     chapters.splice(index, 1);
     setNumberOfChapters(chapters.length);
@@ -147,7 +145,7 @@ export const TextEditPage = () => {
     setTimeout(history.goBack(), 50);
   };
 
-  if (text && (auth.username !== text.author.username && !isCurrentUserAdmin)) {
+  if (text && auth.username !== text.author.username && !isCurrentUserAdmin) {
     dontHavePermission();
   }
 
@@ -185,21 +183,29 @@ export const TextEditPage = () => {
           {/* Card Body */}
           <div className="card-body">
             <div className="container ">
-              <div className="d-flex justify-content-center mb-3">
-                <h5 style={{ marginTop: "0.45rem", marginRight: "0.5rem" }}>
-                  Title:{" "}
-                </h5>
-                <input
-                  className="form-control"
-                  id="textTitle"
-                  name="title"
-                  type="text"
-                  placeholder="Title"
-                  style={{ width: "18rem" }}
-                  required={true}
-                  value={textTitle && textTitle}
-                  onChange={changeTitleHandler}
-                ></input>
+              <div className="d-flex justify-content-between mb-3">
+                <div></div>
+                <div className="d-flex">
+                  <h5 style={{ marginTop: "0.45rem", marginRight: "0.5rem" }}>
+                    Title:{" "}
+                  </h5>
+                  <input
+                    className="form-control"
+                    id="textTitle"
+                    name="title"
+                    type="text"
+                    placeholder="Title"
+                    style={{ width: "18rem" }}
+                    required={true}
+                    value={textTitle && textTitle}
+                    onChange={changeTitleHandler}
+                  ></input>
+                </div>
+
+                <div className="d-flex justify-content-end" style={{opacity: 0.8}}>
+                  <i className="fa fa-user onTextEditPage my-auto p-0 me-1"></i>
+                  <h6 className="my-auto">{text && text.author.username}</h6>
+                </div>
               </div>
             </div>
             <div className="container ">

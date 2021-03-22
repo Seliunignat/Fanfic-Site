@@ -86,6 +86,17 @@ body.dark{
     background-color: var(--darker-color);
 }
 
+.cCenterCommentSection{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 15px;
+    box-sizing: border-box;
+    background-color: var(--light-gray);
+    transition: background-color 0.2s linear;
+    z-index: 0;
+}
+
 .centeredElement{
     display: flex;
     justify-content: center;
@@ -220,6 +231,19 @@ body.dark{
     border-color: var(--darker-color);
 }
 
+.avatar.drag-area{
+    border: 5px dashed var(--darker-color);
+    opacity: 0.95;
+}
+
+.drag-area-text{
+    position: absolute;
+    z-index: 1;
+    margin-top: -50px;
+    margin-left: 50px;
+    font-weight: bold;
+}
+
 .userAvatarUsernameOnFanficCard{
     opacity: 0.85;
     cursor: pointer;
@@ -234,6 +258,14 @@ body.dark{
 .dark .userAvatarUsernameOnFanficCard:hover{
     opacity: 1;
     background: var(--gray-500);
+}
+
+.leaveCommentCard{
+    width: 35rem;
+}
+
+.commentCardInCommentSection{
+    width: 35rem
 }
 
 .dark .userImageSection{
@@ -311,6 +343,8 @@ body.dark{
     stroke: var(--blue-500);
 }
 
+
+
 @media (min-width: 992px){
     .cardFanfics{
         width: 60rem;
@@ -329,6 +363,12 @@ body.dark{
     }
     .mainCard_CreatePage{
         width: 60rem;
+    }
+    .chapterContentArea{
+        max-width: 47rem;
+    }
+    .cardFanficMainPage{
+        width: 35rem;
     }
 }
 
@@ -360,9 +400,18 @@ body.dark{
     .mainCard_CreatePage{
         width: 40rem;
     }
+    .chapterContentArea{
+        max-width: 35rem;
+    }
+    .cardFanficMainPage{
+        width: 30rem;
+    }
 }
 
 @media (max-width: 830px) {
+    h6{
+        font-size: .8rem;
+    }
     .table {
         font-size: .7em;
     }
@@ -384,6 +433,26 @@ body.dark{
     .mainCard_CreatePage{
         width: 22rem;
     }
+    .ratingStars{
+        size: 20px;
+    }
+    .chapterContentArea{
+        max-width: 30rem;
+    }
+    .cardFanficMainPage{
+        width: 20rem;
+    }
+    .commentCardInCommentSection{
+        width: 20rem;
+    }
+    .leaveCommentCard {
+        width: 20rem;
+    }
+}
+
+.leaveCommentCard {
+    display: flex;
+    /* position: absolute; */
 }
 
 .dark .mainCard_CreatePage{
@@ -409,6 +478,11 @@ body.dark{
     font-size: 30px;
     border-radius: 7px;
     color: black;
+}
+
+.fa-user.onTextEditPage{
+    color: black;
+    font-size: 15px
 }
 
 .fa-home{
@@ -514,9 +588,9 @@ body.dark{
     background-color: var(--dark-color);
 }
 
-.cardFanficMainPage{
+/* .cardFanficMainPage{
     width: 35rem;
-}
+} */
 
 .dark .cardFanficMainPage{
     background-color: var(--dark-color);

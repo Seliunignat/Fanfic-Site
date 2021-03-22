@@ -11,11 +11,12 @@ import { AuthContext } from "../context/AuthContext";
 import { Loader } from "../components/Loader";
 import { useAuth } from "../hooks/auth.hook";
 import { useMessage } from "../hooks/message.hook";
+import { CommentsSection } from "../components/CommentsSection";
 
 export const TextViewPage = () => {
   const auth = useAuth();
   const history = useHistory();
-  const message = useMessage()
+  const message = useMessage();
   //const jwt = require("jsonwebtoken");
   const { username, token } = useContext(AuthContext);
   const isAuthenticated = !!token;
@@ -96,7 +97,7 @@ export const TextViewPage = () => {
   };
 
   const likeHandler = async (chapter) => {
-    if(auth.token){
+    if (auth.token) {
       var userIndex = -1;
       chapter.likes.forEach((userId, index) => {
         if (auth.userId === userId) {
@@ -114,15 +115,19 @@ export const TextViewPage = () => {
         })
       );
       try {
-        const data = await request(`/api/text/updateChapterLikesInText/${text._id}`, 'POST', {chapter}, {Authorization: `Bearer ${auth.token}`})
+        const data = await request(
+          `/api/text/updateChapterLikesInText/${text._id}`,
+          "POST",
+          { chapter },
+          { Authorization: `Bearer ${auth.token}` }
+        );
         // console.log(data.message)
       } catch (e) {
-        console.log(e.message)
+        console.log(e.message);
       }
-    }else{
-      message("Вы не авторизованы!")
+    } else {
+      message("Вы не авторизованы!");
     }
-    
   };
 
   useEffect(() => {
@@ -149,6 +154,7 @@ export const TextViewPage = () => {
   }
 
   return (
+    <>
     <div className="fanficViewPageContainer">
       <h1 className="d-flex justify-content-center">Fanfic View Page</h1>
       <h3 className="d-flex justify-content-center">
@@ -173,7 +179,10 @@ export const TextViewPage = () => {
           <h1 className="ms-2">{text && text.title}</h1>
           <div className="my-auto">
             {isAuthenticated ? (
-              <ReactStars {...firstExample}></ReactStars>
+              <ReactStars
+                {...firstExample}
+                className="ratingStars"
+              ></ReactStars>
             ) : (
               <ReactStars {...withoutAuth}></ReactStars>
             )}
@@ -222,50 +231,62 @@ export const TextViewPage = () => {
                 chapters &&
                 chapters.map((chapter, index) => {
                   return (
-                    <div
-                      className={`tab-pane fade show ${
-                        index === 0 && "active"
-                      }`}
-                      id={`list-${index + 1}`}
-                      role="tabpanel"
-                      aria-labelledby={`list-${index + 1}-list`}
-                    >
-                      <div className="scrollspyChapters">
-                        <h2 className="border-bottom">
-                          Глава {index + 1}. {chapter && chapter.chapterTitle}
-                        </h2>
-                        <ReactMarkdown
-                          source={chapter.chapterContent}
-                        ></ReactMarkdown>
-                      </div>
-                      <div className="d-flex justify-content-start border-top border-2">
-                        <div className="my-2 ms-1 likeButtonOnTextView d-flex">
-                          <div
-                            className={`heartSvgContainer ${
-                              chapter &&
-                              chapter.likes.find(
-                                (userId) => userId === auth.userId
-                              )
-                                ? "active"
-                                : ""
-                            }`}
-                            onClick={() => likeHandler(chapter)}
-                          >
-                            <svg
-                              viewBox="-15 -28 540.00002 512"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path d="m471.382812 44.578125c-26.503906-28.746094-62.871093-44.578125-102.410156-44.578125-29.554687 0-56.621094 9.34375-80.449218 27.769531-12.023438 9.300781-22.917969 20.679688-32.523438 33.960938-9.601562-13.277344-20.5-24.660157-32.527344-33.960938-23.824218-18.425781-50.890625-27.769531-80.445312-27.769531-39.539063 0-75.910156 15.832031-102.414063 44.578125-26.1875 28.410156-40.613281 67.222656-40.613281 109.292969 0 43.300781 16.136719 82.9375 50.78125 124.742187 30.992188 37.394531 75.535156 75.355469 127.117188 119.3125 17.613281 15.011719 37.578124 32.027344 58.308593 50.152344 5.476563 4.796875 12.503907 7.4375 19.792969 7.4375 7.285156 0 14.316406-2.640625 19.785156-7.429687 20.730469-18.128907 40.707032-35.152344 58.328125-50.171876 51.574219-43.949218 96.117188-81.90625 127.109375-119.304687 34.644532-41.800781 50.777344-81.4375 50.777344-124.742187 0-42.066407-14.425781-80.878907-40.617188-109.289063zm0 0" />
-                            </svg>
+                    <>
+                      <div
+                        className={`tab-pane fade show ${
+                          index === 0 && "active"
+                        }`}
+                        id={`list-${index + 1}`}
+                        role="tabpanel"
+                        aria-labelledby={`list-${index + 1}-list`}
+                      >
+                        <div className="scrollspyChapters d-flex justify-content-between">
+                          <div className="chapterContentArea">
+                            <h2 className="border-bottom">
+                              Глава {index + 1}.{" "}
+                              {chapter && chapter.chapterTitle}
+                            </h2>
+                            <ReactMarkdown
+                              source={chapter.chapterContent}
+                            ></ReactMarkdown>
                           </div>
-                          <span className="ms-1">
-                            {chapter && chapter.likes.length === 0
-                              ? "0"
-                              : chapter.likes.length}
-                          </span>
+                          <div className="card mt-1 mb-auto p-1 sticky-top">
+                            <img
+                              src={chapter && chapter.chapterImage}
+                              alt="hhh"
+                              style={{width: '10rem'}}
+                            ></img>
+                          </div>
+                        </div>
+                        <div className="d-flex justify-content-start border-top border-2">
+                          <div className="my-2 ms-1 likeButtonOnTextView d-flex">
+                            <div
+                              className={`heartSvgContainer ${
+                                chapter &&
+                                chapter.likes.find(
+                                  (userId) => userId === auth.userId
+                                )
+                                  ? "active"
+                                  : ""
+                              }`}
+                              onClick={() => likeHandler(chapter)}
+                            >
+                              <svg
+                                viewBox="-15 -28 540.00002 512"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path d="m471.382812 44.578125c-26.503906-28.746094-62.871093-44.578125-102.410156-44.578125-29.554687 0-56.621094 9.34375-80.449218 27.769531-12.023438 9.300781-22.917969 20.679688-32.523438 33.960938-9.601562-13.277344-20.5-24.660157-32.527344-33.960938-23.824218-18.425781-50.890625-27.769531-80.445312-27.769531-39.539063 0-75.910156 15.832031-102.414063 44.578125-26.1875 28.410156-40.613281 67.222656-40.613281 109.292969 0 43.300781 16.136719 82.9375 50.78125 124.742187 30.992188 37.394531 75.535156 75.355469 127.117188 119.3125 17.613281 15.011719 37.578124 32.027344 58.308593 50.152344 5.476563 4.796875 12.503907 7.4375 19.792969 7.4375 7.285156 0 14.316406-2.640625 19.785156-7.429687 20.730469-18.128907 40.707032-35.152344 58.328125-50.171876 51.574219-43.949218 96.117188-81.90625 127.109375-119.304687 34.644532-41.800781 50.777344-81.4375 50.777344-124.742187 0-42.066407-14.425781-80.878907-40.617188-109.289063zm0 0" />
+                              </svg>
+                            </div>
+                            <span className="ms-1">
+                              {chapter && chapter.likes.length === 0
+                                ? "0"
+                                : chapter.likes.length}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </>
                   );
                 })}
             </div>
@@ -273,7 +294,7 @@ export const TextViewPage = () => {
         </div>
         <div className="border-bottom"></div>
 
-        <div className="d-flex justify-content-end my-3 me-4">
+        <div className="d-flex justify-content-end my-2 me-3">
           {text &&
             username &&
             (username === text.author.username || isCurrentUserAdmin) && (
@@ -294,5 +315,7 @@ export const TextViewPage = () => {
         </div>
       </div>
     </div>
+    {textId && <CommentsSection textId={textId}></CommentsSection>}
+    </>
   );
 };

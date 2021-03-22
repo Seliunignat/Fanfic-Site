@@ -3,6 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FiCornerDownLeft } from "react-icons/fi";
 import { useHistory } from "react-router-dom";
+import { Loader } from "../components/Loader";
 import { AuthContext } from "../context/AuthContext";
 import { useHttp } from "../hooks/http.hook";
 import { useMessage } from "../hooks/message.hook";
@@ -16,7 +17,7 @@ export const CreateTextPage = () => {
   const [chpatersImages, setChaptersImages] = useState([]);
   const [chapters, setChapters] = useState([]);
   const [summary, setSummary] = useState("");
-  const [imageLoading, setImageLoading] = useState(false);
+  const [imagesLoading, setImagesLoading] = useState([]);
   const theme = localStorage.getItem("theme-color");
 
   const [form, setForm] = useState({
@@ -42,6 +43,7 @@ export const CreateTextPage = () => {
         return chapterImage;
       })
     );
+    imagesLoading.push(false);
     setChapters(
       chapters.map((chapter) => {
         return chapter;
@@ -180,7 +182,14 @@ export const CreateTextPage = () => {
         console.log(data);
 
         // const upload = await request('/api/image/uploadChapterImage', 'POST', )
-        setImageLoading(true)
+        setImagesLoading(
+          imagesLoading.map((imageLoading, indexOfChapter) => {
+            if (indexOfChapter === index) {
+              return true;
+            }
+            return imageLoading;
+          })
+        );
 
         const response = await fetch(
           "https://api.cloudinary.com/v1_1/ignatcloud/image/upload",
@@ -192,7 +201,14 @@ export const CreateTextPage = () => {
 
         const upload = await response.json();
 
-        setImageLoading(false)
+        setImagesLoading(
+          imagesLoading.map((imageLoading, indexOfChapter) => {
+            if (indexOfChapter === index) {
+              return false;
+            }
+            return imageLoading;
+          })
+        );
 
         console.log(upload.secure_url);
 
@@ -203,11 +219,12 @@ export const CreateTextPage = () => {
           })
         );
 
-        setChapters(chapters.map((chapter, index) => {
-          chapter.chapterImage = chpatersImages[index]
-          return chapter
-        }))
-
+        setChapters(
+          chapters.map((chapter, index) => {
+            chapter.chapterImage = chpatersImages[index];
+            return chapter;
+          })
+        );
       } catch (e) {
         console.log(e.message);
       }
@@ -215,8 +232,8 @@ export const CreateTextPage = () => {
   };
 
   useEffect(() => {
-    console.log("imageLoading: " + imageLoading)
-  }, [imageLoading])
+    console.log("imagesLoading: " + imagesLoading);
+  }, [imagesLoading]);
 
   return (
     <DragDropContext
@@ -282,14 +299,16 @@ export const CreateTextPage = () => {
                 ></textarea>
               </div>
             </div>
-            <div className="d-flex justify-content-start ms-5 mb-3">
-              <h3 className="me-4">Chapters: </h3>
-              <button
-                className="btn btn-outline-primary py-auto"
-                onClick={addNewChapter}
-              >
-                Add chapter
-              </button>
+            <div className="d-flex justify-content-between ms-5 mb-3">
+              <div className="d-flex justify-content-start">
+                <h3 className="me-4">Chapters: </h3>
+                <button
+                  className="btn btn-outline-primary py-auto"
+                  onClick={addNewChapter}
+                >
+                  Add chapter
+                </button>
+              </div>
             </div>
             <Droppable droppableId="droppable-1">
               {(provided, _) => (
@@ -395,19 +414,26 @@ export const CreateTextPage = () => {
                                     </div>
                                     {chapter &&
                                       (chapter.chapterImage == null ? (
-                                        <input
-                                          className="my-auto"
-                                          id={`chapterImage${index + 1}`}
-                                          type="file"
-                                          onChange={(e) =>
-                                            addImagetoChapterHandler({
-                                              index,
-                                              event: e,
-                                            })
-                                          }
-                                        ></input>
+                                        imagesLoading &&
+                                        imagesLoading[index] ? (
+                                          <div className="my-auto">
+                                            <Loader></Loader>
+                                          </div>
+                                        ) : (
+                                          <input
+                                            className="my-auto"
+                                            id={`chapterImage${index + 1}`}
+                                            type="file"
+                                            onChange={(e) =>
+                                              addImagetoChapterHandler({
+                                                index,
+                                                event: e,
+                                              })
+                                            }
+                                          ></input>
+                                        )
                                       ) : (
-                                        "Loaded"
+                                        <span className="my-auto">Loaded</span>
                                       ))}
                                   </div>
                                 </div>

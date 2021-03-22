@@ -28,8 +28,16 @@ router.post('/uploadChapterImage', async(req, res) => {
 
     } catch (e) {
         console.log(e.message)
-        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+        res.status(500).json({message: 'Что-то пошло не так при загрузки картинки, попробуйте снова'})
     }
 })
+
+// router.post('/uploadAvatarImageOfUser/:id', async(req, res) => {
+//     try {
+//         const data = 
+//     } catch (e) {
+//         res.status(500).json({message: 'Что-то пошло не так при загрузке аватарки, попробуйте снова'})
+//     }
+// })
 
 module.exports = router
