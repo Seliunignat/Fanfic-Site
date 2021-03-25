@@ -15,7 +15,7 @@ export const UserPage = () => {
   const history = useHistory();
   const message = useMessage();
   const { loading, request, error, clearError } = useHttp();
-  const theme = localStorage.getItem("theme-color");
+  const [themeColor, setThemeColor] = useState(localStorage.getItem("theme-color") || 'light');
   const [user, setUser] = useState(null);
   const userIdParams = useParams().id;
   const [drag, setDrag] = useState(false);
@@ -267,7 +267,7 @@ export const UserPage = () => {
               </h1>
               {user &&
                 (auth.username === user.username || isCurrentUserAdmin) &&
-                (theme === "dark" ? (
+                (themeColor === "dark" ? (
                   <button
                     className="btn btn-light ms-5 w-auto my-auto"
                     onClick={redirectToCreateTextPage}

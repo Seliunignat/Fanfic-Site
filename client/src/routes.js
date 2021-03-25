@@ -8,6 +8,7 @@ import { CreateTextPage } from './pages/CreateTextPage'
 import { TextViewPage } from './pages/TextViewPage'
 import { TextEditPage } from './pages/TextEditPage'
 import { TestPage } from './pages/TestPage'
+import { SearchResultsPage } from './pages/SearchResultsPage'
 
 
 export const useRoutes = isAuthenticated => {
@@ -33,6 +34,9 @@ export const useRoutes = isAuthenticated => {
                 <Route path="/text/:id/edit">
                     <TextEditPage />
                 </Route>
+                <Route path="/search/results/:text">
+                    <SearchResultsPage></SearchResultsPage>
+                </Route>
                 <Redirect to="/main"></Redirect>
             </Switch>
         )
@@ -57,6 +61,9 @@ export const useRoutes = isAuthenticated => {
                 </Route>
                 <Route path="/text/:id/view">
                     <TextViewPage />
+                </Route>
+                <Route path="/search/results/:text">
+                    <SearchResultsPage></SearchResultsPage>
                 </Route>
                 <Redirect to="/main"></Redirect>
             </Switch>

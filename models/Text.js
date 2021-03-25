@@ -9,7 +9,9 @@ const schema = new Schema({
     lastUpdate: {type: Date, default: Date.now},
     chapters: [{id: Number, chapterTitle: String, chapterContent: String, chapterImage: String, order: Number, likes: [{type: Types.ObjectId, ref:'User'}]}],
     rateValues: [{user: {type: Types.ObjectId, ref:'User'}, rateValue: Number}],
+    comments: [{type: Types.ObjectId, ref: 'Comment'}],
     avarageRating: {type: Number, default: 0}
 })
+// schema.index({'textTitle': 'text', 'chapters.chapterTitle': 'text', 'chapter.chapterContent': 'text', 'author': 'text'})
 
 module.exports = model('Text', schema)

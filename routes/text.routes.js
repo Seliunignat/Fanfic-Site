@@ -3,8 +3,30 @@ const config = require('config')
 const Text = require('../models/Text')
 const auth = require('../middleware/auth.middleware')
 const {check, validationResult} = require('express-validator')
+const algoliasearch = require('algoliasearch')
 const User = require('../models/User')
 const router = Router()
+
+const client = algoliasearch("R0Q6VC5O2I", "6348fe46decdeeba82f4524c233288ee")
+const globalIndex = client.initIndex('global')
+
+const prepareText = (text) => {
+    // console.log("text " + text)
+    return{
+        objectID: text._id,
+        title: text.title,
+        summary: text.summary,
+        author: text.author.username,
+        chapters: text.chapters.map(chapter => ({
+            chapterTitle: chapter.chapterTitle,
+            chapterContent: chapter.chapterContent
+        })),
+        comments: text.comments.map(comment => ({
+            content: comment.content,
+            author: comment.author
+        }))
+    }
+}
 
 router.post('/create', 
 [
@@ -24,16 +46,15 @@ async(req, res) => {
 
         const text = Text({title, summary, author, date, chapters})
 
-        // console.log("text: " + text)
-
         const savedText = await text.save()
 
-        // console.log("savedText: " + savedText)
+        const prepared = await prepareText(savedText)
+        await globalIndex.saveObject(prepared)
+
         const userTexts = (await User.find({_id: author}))[0].texts
-        //console.log(userTexts)
 
         userTexts.push(savedText._id)
-        //console.log(userTexts)
+
         await User.updateOne({_id: author}, {$set : {texts: userTexts}})
 
         res.status(201).json({message: 'Фанфик успешно создан' })
@@ -42,7 +63,7 @@ async(req, res) => {
         console.log(e.message)
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
-})
+});
 
 router.post('/update/:id', auth, async (req, res) =>{
     try {
@@ -52,15 +73,22 @@ router.post('/update/:id', auth, async (req, res) =>{
         // console.log(req.body.text)
         const {title, summary, chapters} = req.body
         if(req.body){
-            await Text.updateOne({_id: req.params.id}, {$set : {title: title, summary: summary, chapters: chapters, lastUpdate: new Date(Date.now())}})
-            // findedText.title = req.body.text.title
+            const updatedText = await Text.updateOne({_id: req.params.id}, {$set : {title: title, summary: summary, chapters: chapters, lastUpdate: new Date(Date.now())}})
+            
+            const text = await Text.findById({_id: req.params.id}).populate('author').populate('comments')
+
+            // console.log(text)
+
+            const prepared = await prepareText(text)
+            await globalIndex.saveObject(prepared)
+
         }
         //console.log("try to save")
         res.status(201).json({message: 'Фанфик успешно отредактирован' })
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
-})
+});
 
 router.post('/setRateValueOnText/:id', auth, async(req, res) => {
     try {
@@ -112,7 +140,7 @@ router.post('/setRateValueOnText/:id', auth, async(req, res) => {
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
-})
+});
 
 
 router.get('/latest', async (req, res) => {
@@ -122,7 +150,7 @@ router.get('/latest', async (req, res) => {
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
-})
+});
 
 router.get('/:id', async(req, res) => {
     try {
@@ -131,7 +159,7 @@ router.get('/:id', async(req, res) => {
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
-})
+});
 
 router.get(`/getUserTexts/:id`, async(req, res) => {
     try {
@@ -143,7 +171,7 @@ router.get(`/getUserTexts/:id`, async(req, res) => {
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
-})
+});
 
 router.post('/updateChapterLikesInText/:id', auth, async(req, res) => {
     try {
@@ -162,17 +190,21 @@ router.post('/updateChapterLikesInText/:id', auth, async(req, res) => {
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
-})
+});
+
 
 router.delete('/delete/:id', async (req, res) => {
     try {
         //console.log("try to delete")
         await Text.remove({_id: req.params.id})
+
+        await globalIndex.deleteObject(req.params.id)
+
         res.json({message: "Успешно удалено"})
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
-})
+});
 
 
 module.exports = router 

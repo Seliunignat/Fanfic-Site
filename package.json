@@ -17,6 +17,7 @@
   "author": "Seliun Ignat <seliunignat@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "algoliasearch": "^4.8.6",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.25.0",
     "config": "^3.3.3",

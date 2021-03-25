@@ -38,6 +38,7 @@ export const useAuth = () => {
         setEmail(null)
         setIsBanned(null)
         localStorage.removeItem(storageName)
+        localStorage.setItem('theme-color', 'light')
     },[])
 
     useEffect(() => {

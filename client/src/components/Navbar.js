@@ -5,15 +5,17 @@ import {AuthPage} from '../pages/AuthPage'
 import { useAuth } from '../hooks/auth.hook'
 import { set } from 'mongoose'
 import { useMessage } from '../hooks/message.hook'
+import { useHttp } from '../hooks/http.hook'
 
 export const Navbar = (props) => {
     const history = useHistory()
     const message = useMessage()
-    
     const [currentUserName, setCurrentUserName] = useState(null)
-
     const auth = useContext(AuthContext)
+    const [queryStringValue, setQueryStringValue] = useState("")
+    const [results, setResults] = useState(null)
     const useauth = useAuth()
+    const {loading, request} = useHttp()
     const isUserAuthenticated = !!auth.token
     const currentWindowPage = props.windowPage
 
@@ -62,16 +64,6 @@ export const Navbar = (props) => {
         }
     }, [theme])
 
-    // useEffect(() => {
-    //     console.log("currentWindowPage: " + currentWindowPage)
-    //     const data = JSON.parse(localStorage.getItem('userData'))
-    //     if(data && data.token) {
-    //         //currentUserName = JSON.parse(localStorage.getItem('userData')).username
-    //         //console.log(data)
-    //     }
-    // }, [currentWindowPage])
-
-
     const changeModeHandler = () => {
         document.body.classList.toggle('dark');
         if(theme === 'light'){
@@ -83,20 +75,36 @@ export const Navbar = (props) => {
         localStorage.setItem('theme-color', theme)
     }
 
+    const changeHandler = (event) =>{
+        setQueryStringValue(event.target.value)
+    }
+
+    useEffect(() => {
+        console.log(queryStringValue)
+    }, [queryStringValue])
+
+    const searchHandler = (event) =>{
+        event.preventDefault()
+        console.log(queryStringValue)
+        history.push(`/search/results/${queryStringValue}`)   
+        //event.target.reset()
+    }
+
+    
+
     return (
         <nav className="navbar sticky-top navbar-light mainNavBar dShadow">
             <div className="container-fluid">
                 <h1 className="navbar-brand" onClick={() => history.push("/main")}>Мордор</h1>
-                <form className="d-flex">
+                <form className="d-flex" onSubmit={searchHandler}>
                 {!(currentWindowPage === "/login" || currentWindowPage === "/registration") && 
                     <>
-                    <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
-                    <button className="btn btn-outline-success me-2">Search</button>
+                    <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" value={queryStringValue} onChange={changeHandler}></input>
+                    <button className="btn btn-outline-success me-2" type="submit" >Search</button>
                     </>
                 }
                 </form>
                 {/* {console.log('isAuthenticated: ' + JSON.stringify(isAuthenticated))} */}
-                
                 {isUserAuthenticated && 
                     <div className="d-flex" >
                         {currentWindowPage === "/main" && 

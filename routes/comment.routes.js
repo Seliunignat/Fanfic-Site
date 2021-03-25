@@ -1,11 +1,32 @@
-const {Router} = require('express')
+const {Router, text} = require('express')
 const config = require('config')
 const Comment = require('../models/Comment')
 const auth = require('../middleware/auth.middleware')
 const {check, validationResult} = require('express-validator')
-const { connect } = require('mongoose')
+const algoliasearch = require('algoliasearch')
+const Text = require('../models/Text')
 const router = Router()
 
+const client = algoliasearch("R0Q6VC5O2I", "6348fe46decdeeba82f4524c233288ee")
+const globalIndex = client.initIndex('global')
+
+const prepareText = (text) => {
+    // console.log("text " + text)
+    return{
+        objectID: text._id,
+        title: text.title,
+        summary: text.summary,
+        author: text.author.username,
+        chapters: text.chapters.map(chapter => ({
+            chapterTitle: chapter.chapterTitle,
+            chapterContent: chapter.chapterContent
+        })),
+        comments: text.comments.map(comment => ({
+            content: comment.content,
+            author: comment.author
+        }))
+    }
+}
 
 router.post('/create', auth,[
         check('content').isLength({min: 1})
@@ -29,7 +50,19 @@ router.post('/create', auth,[
 
         const comment = Comment({author, content, onFanfic: textId})
 
-        await comment.save()
+        const uloadedComment = await comment.save()
+
+        const commentsOfText = (await Text.findById(textId)).comments
+
+        // console.log("commentsOfText\n" + commentsOfText)
+
+        commentsOfText.push(uloadedComment)
+
+        await Text.updateOne({_id: textId}, {$set: { comments: commentsOfText.map(commentOfText => commentOfText)} })
+
+        const text = await Text.findById({_id: textId}).populate('author').populate('comments')
+        const prepared = prepareText(text)
+        await globalIndex.saveObject(prepared)
 
         res.status(201).json({message: 'Комментарий успешно добавлен'})
     } catch (e) {
