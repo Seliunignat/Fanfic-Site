@@ -25,7 +25,7 @@ export const useRoutes = isAuthenticated => {
                 <Route path="/test" exact>
                     <TestPage></TestPage>
                 </Route>
-                <Route path="/createTextPage" exact>
+                <Route path="/createTextPage/:id">
                     <CreateTextPage></CreateTextPage>
                 </Route>
                 <Route path="/text/:id/view">

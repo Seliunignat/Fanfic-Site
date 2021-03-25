@@ -32,14 +32,16 @@ export const UserPage = () => {
           console.log("Срок действия токена закончен");
           history.goBack();
           auth.logout();
+        }else{
+          isCurrentUserAdmin = decoded && decoded.isAdmin
         }
       }
     );
 
-    if (dataFromToken) isCurrentUserAdmin = dataFromToken.isAdmin;
+    // console.log(dataFromToken)
   }
 
-  //console.log(isCurrentUserAdmin)
+  console.log("isCurrentUserAdmin" + isCurrentUserAdmin)
 
   const getUserData = useCallback(async () => {
     try {
@@ -163,7 +165,7 @@ export const UserPage = () => {
   // }, [error, message, clearError]);
 
   const redirectToCreateTextPage = () => {
-    history.push("/createTextPage");
+    history.push(`/createTextPage/${user._id}`);
   };
 
   return (

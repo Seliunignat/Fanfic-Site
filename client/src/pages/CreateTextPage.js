@@ -2,7 +2,7 @@ import { data } from "jquery";
 import React, { useContext, useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FiCornerDownLeft } from "react-icons/fi";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Loader } from "../components/Loader";
 import { AuthContext } from "../context/AuthContext";
 import { useHttp } from "../hooks/http.hook";
@@ -12,6 +12,7 @@ export const CreateTextPage = () => {
   const message = useMessage();
   const auth = useContext(AuthContext);
   const history = useHistory();
+  const jwt = require("jsonwebtoken");
   const { loading, request, error, clearError } = useHttp();
   const [numberOfChapters, setNumberOfChapters] = useState(0);
   const [chpatersImages, setChaptersImages] = useState([]);
@@ -19,10 +20,33 @@ export const CreateTextPage = () => {
   const [summary, setSummary] = useState("");
   const [imagesLoading, setImagesLoading] = useState([]);
   const theme = localStorage.getItem("theme-color");
+  const author = useParams().id
+
+  var isCurrentUserAdmin = false;
+  if (auth.token) {
+    const dataFromToken = jwt.verify(
+      auth.token,
+      "ignat fanfic site",
+      function (error, decoded) {
+        if (error) {
+          console.log("Срок действия токена закончен");
+          history.goBack();
+          auth.logout();
+        }else{
+          isCurrentUserAdmin = decoded.isAdmin
+        }
+      }
+    );
+  }
+  //console.log(auth.username)
+
+  if(!(auth.userId === author || isCurrentUserAdmin)){
+    history.goBack()
+  }
 
   const [form, setForm] = useState({
     title: "",
-    author: auth.userId,
+    author: author,
     date: null,
     //chapters: null
   });
@@ -120,7 +144,7 @@ export const CreateTextPage = () => {
         {
           title: form.title,
           summary: summary,
-          author: auth.userId,
+          author: author,
           chapters: chapters,
         },
         { Authorization: `Bearer ${auth.token}` }
