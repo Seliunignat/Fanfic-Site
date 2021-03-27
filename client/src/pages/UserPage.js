@@ -15,7 +15,9 @@ export const UserPage = () => {
   const history = useHistory();
   const message = useMessage();
   const { loading, request, error, clearError } = useHttp();
-  const [themeColor, setThemeColor] = useState(localStorage.getItem("theme-color") || 'light');
+  const [themeColor, setThemeColor] = useState(
+    localStorage.getItem("theme-color") || "light"
+  );
   const [user, setUser] = useState(null);
   const userIdParams = useParams().id;
   const [drag, setDrag] = useState(false);
@@ -32,8 +34,8 @@ export const UserPage = () => {
           console.log("Срок действия токена закончен");
           history.goBack();
           auth.logout();
-        }else{
-          isCurrentUserAdmin = decoded && decoded.isAdmin
+        } else {
+          isCurrentUserAdmin = decoded && decoded.isAdmin;
         }
       }
     );
@@ -41,7 +43,7 @@ export const UserPage = () => {
     // console.log(dataFromToken)
   }
 
-  console.log("isCurrentUserAdmin" + isCurrentUserAdmin)
+  console.log("isCurrentUserAdmin" + isCurrentUserAdmin);
 
   const getUserData = useCallback(async () => {
     try {
@@ -267,23 +269,14 @@ export const UserPage = () => {
                   : ""}
                 Fanfics
               </h1>
-              {user &&
-                (auth.username === user.username || isCurrentUserAdmin) &&
-                (themeColor === "dark" ? (
-                  <button
-                    className="btn btn-light ms-5 w-auto my-auto"
-                    onClick={redirectToCreateTextPage}
-                  >
-                    Create new
-                  </button>
-                ) : (
-                  <button
-                    className="btn btn-dark ms-5 w-auto my-auto"
-                    onClick={redirectToCreateTextPage}
-                  >
-                    Create new
-                  </button>
-                ))}
+              {user && (auth.username === user.username || isCurrentUserAdmin) && (
+                <button
+                  className="btn btn-dark ms-5 w-auto my-auto"
+                  onClick={redirectToCreateTextPage}
+                >
+                  Create new
+                </button>
+              )}
             </div>
             <div className="container">
               {!loading && (

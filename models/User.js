@@ -7,7 +7,8 @@ const schema = new Schema({
     email: {type: String, required: true},
     isBanned: {type: Boolean, required: true},
     isAdmin: {type: Boolean, required: true},
-    texts: [{type: Types.ObjectId, ref: 'Text', default: ""}]
+    texts: [{type: Types.ObjectId, ref: 'Text', default: ""}],
+    themeColor: {type: String, default: 'light'}
 })
 
 module.exports = model('User', schema)

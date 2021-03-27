@@ -7,8 +7,10 @@
      --light-color-hover: #ebedf1;
      --darker-color: #1e2225;
      --gray-500: #adb5bd;
+     --gray-800: #343a40;
      --light-gray: #edeef0;
      --red-500: #dc3545;
+     --red-400: #df4d5b;
      --blue-500: #0d6efd;
  }
 
@@ -29,6 +31,10 @@ body.dark{
     background-color: var(--darker-color);
 }
 
+.navbar{
+    padding-top: .3rem;
+    padding-bottom: .3rem;
+}
 
 .cCenter {
     display: flex;
@@ -51,7 +57,7 @@ body.dark{
     transition: background-color 0.2s linear;
 }
 
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark span{
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark span, .dark li{
     color: var(--light-color);
 }
 
@@ -236,6 +242,11 @@ body.dark{
     opacity: 0.95;
 }
 
+.drag-area{
+    border: 2px dashed var(--darker-color);
+    /* opacity: 0.95; */
+}
+
 .drag-area-text{
     position: absolute;
     z-index: 1;
@@ -273,6 +284,12 @@ body.dark{
 
 }
 
+.dark .btn-dark{
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    border-color: var(--light-color);
+}
+
 .userFanficsSection{
     padding-top: 0.5rem;
     background-color: var(--light-gray);
@@ -288,15 +305,19 @@ body.dark{
 }
 
 .fanficViewPageContainer{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     transition: background-color 0.2s linear;
 }
 
 .dark .fanficViewPageContainer{
-    background-color: var(--dark-color);
+    background-color: var(--darker-color);
     transition: background-color 0.2s linear;
 }
 
 .scrollspyChapters{
+    /* display: flex; */
     position: relative;
     /* min-height: 15rem; */
     /* max-height: 25rem; */
@@ -343,111 +364,8 @@ body.dark{
     stroke: var(--blue-500);
 }
 
-
-
-@media (min-width: 992px){
-    .cardFanfics{
-        width: 60rem;
-    }
-    .fa-pencil{
-        font-size: 1.25rem;
-    }
-    .fa-eye{
-        font-size: 1.25rem;
-    }
-    .fa-trash{
-        font-size: 1.25rem;
-    }
-    .chapterCardOnCreatePage{
-        width: 40rem;
-    }
-    .mainCard_CreatePage{
-        width: 60rem;
-    }
-    .chapterContentArea{
-        max-width: 47rem;
-    }
-    .cardFanficMainPage{
-        width: 35rem;
-    }
-}
-
-@media (max-width: 991px) {
-    .navbar .container-fluid {
-        flex-direction: column;
-    }
-    .navbar-brand {
-        margin: 0;
-    }
-    .mLeft80 {
-        margin-left: 0;
-    }
-    .cardFanfics{
-        width: 50rem;
-    }
-    .fa-pencil {
-        font-size: 1rem;
-    }
-    .fa-eye{
-        font-size: 1rem;
-    }
-    .fa-trash{
-        font-size: 1rem;
-    }
-    .chapterCardOnCreatePage{
-        width: 35rem;
-    }
-    .mainCard_CreatePage{
-        width: 40rem;
-    }
-    .chapterContentArea{
-        max-width: 35rem;
-    }
-    .cardFanficMainPage{
-        width: 30rem;
-    }
-}
-
-@media (max-width: 830px) {
-    h6{
-        font-size: .8rem;
-    }
-    .table {
-        font-size: .7em;
-    }
-    .cardFanfics{
-        width: 37rem;
-    }
-    .fa-pencil {
-        font-size: .8rem;
-    }
-    .fa-eye{
-        font-size: .8rem;
-    }
-    .fa-trash{
-        font-size: .8rem;
-    }
-    .chapterCardOnCreatePage{
-        width: 20rem;
-    }
-    .mainCard_CreatePage{
-        width: 22rem;
-    }
-    .ratingStars{
-        size: 20px;
-    }
-    .chapterContentArea{
-        max-width: 30rem;
-    }
-    .cardFanficMainPage{
-        width: 20rem;
-    }
-    .commentCardInCommentSection{
-        width: 20rem;
-    }
-    .leaveCommentCard {
-        width: 20rem;
-    }
+.dark .likeButtonOnTextView{
+    background-color: var(--gray-800);
 }
 
 .leaveCommentCard {
@@ -466,7 +384,7 @@ body.dark{
     background-color: darkgrey;
 } */
 
-.dark .fa{
+.dark .fa-user, .dark .fa-eye, .dark .fa-pencil, .dark .fa-home{
     color: var(--light-color);
 }
 
@@ -597,10 +515,28 @@ body.dark{
 }
 
 .cardOnTextViewPage{
-    margin-left: 2rem;
-    margin-right: 2rem;
-    margin-bottom: 2rem;
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; */
+    
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    margin-bottom: 1.5rem;
     /* max-height: 400px; */
+}
+.dark .cardOnTextViewPage{
+    background-color: var(--dark-color);
+}
+
+.cardSummaryOnTextViewPage{
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.dark .cardSummaryOnTextViewPage{
+    background-color: var(--dark-color);
 }
 
 .modeCheckBox{
@@ -613,4 +549,176 @@ body.dark{
 .bg-image{
     background: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg') center no-repeat;
     height: 15rem;
+}
+
+.inputImageLabel{
+    
+}
+
+.fileInput{
+    display: none;
+}
+
+@media (min-width: 991px){
+    .cardFanfics{
+        width: 60rem;
+    }
+    .fa-pencil{
+        font-size: 1.25rem;
+    }
+    .fa-eye{
+        font-size: 1.25rem;
+    }
+    .fa-trash{
+        font-size: 1.25rem;
+    }
+    .chapterCardOnCreatePage{
+        width: 40rem;
+    }
+    .mainCard_CreatePage{
+        width: 60rem;
+    }
+    .chapterContentArea{
+        width: 42rem;
+    }
+    .chapterAccordionCollapse{
+        width: 40rem;
+    }
+    .cardFanficMainPage{
+        width: 35rem;
+    }
+    .cardSummaryOnTextViewPage{
+        width: 45rem;
+    }
+    .chapterTitleInput{
+        width: 15rem;
+    }
+    .imageNameAndLoadedClass{
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 991px) {
+    .navbar .container-fluid {
+        flex-direction: column;
+    }
+    .navbar-brand {
+        margin: 0;
+    }
+    .mLeft80 {
+        margin-left: 0;
+    }
+    .cardFanfics{
+        width: 50rem;
+    }
+    .fa-pencil {
+        font-size: 1rem;
+    }
+    .fa-eye{
+        font-size: 1rem;
+    }
+    .fa-trash{
+        font-size: 1rem;
+    }
+    .chapterCardOnCreatePage{
+        width: 35rem;
+    }
+    .mainCard_CreatePage{
+        width: 40rem;
+    }
+    .chapterContentArea{
+        width: 35rem;
+    }
+    .chapterAccordionCollapse{
+        width: 35rem;
+    }
+    .cardFanficMainPage{
+        width: 30rem;
+    }
+    .cardSummaryOnTextViewPage{
+        width: 38rem;
+    }
+    .chapterTitleInput{
+        width: 10rem;
+    }
+    .imageNameAndLoadedClass{
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 767px) {
+    .btn{
+        font-size: .8rem;
+    }
+    h6{
+        font-size: .8rem;
+    }
+    .table {
+        font-size: .7em;
+    }
+    .cardFanfics{
+        width: 37rem;
+    }
+    .fa-pencil {
+        font-size: .8rem;
+    }
+    .fa-eye{
+        font-size: .8rem;
+    }
+    .fa-trash{
+        font-size: .8rem;
+    }
+    .chapterCardOnCreatePage{
+        width: 100%;
+    }
+    .mainCard_CreatePage{
+        width: 22rem;
+    }
+    .ratingStars{
+        size: 20px;
+    }
+    .chapterContentArea{
+        width: 18.5rem;
+    }
+    .chapterAccordionCollapse{
+        width: 18.5rem;
+        min-width: 10rem;
+    }
+    .cardFanficMainPage{
+        width: 20rem;
+    }
+    .cardOnTextViewPage{
+        width: auto;
+    }
+    .cardSummaryOnTextViewPage{
+        width: 30rem;
+    }
+    .commentCardInCommentSection{
+        width: 20rem;
+    }
+    .leaveCommentCard {
+        width: 20rem;
+    }
+    .scrollspyChapters{
+        max-width: 28rem;
+    }
+    .chapterTitleInput{
+        width: 5rem;
+    }
+    .imageNameClass{
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+        overflow: hidden;
+        
+        font-size: 12px;
+        width: 4.2rem;
+    }
+    .textLoaded{
+        font-size: 12px;
+    }
+    .form-control{
+        font-size: .8rem;
+        height: 75%;
+    }
 }

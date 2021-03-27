@@ -1,9 +1,10 @@
 import { data } from "jquery";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FiCornerDownLeft } from "react-icons/fi";
 import { useHistory, useParams } from "react-router-dom";
 import { Loader } from "../components/Loader";
+import { Navbar } from "../components/Navbar";
 import { AuthContext } from "../context/AuthContext";
 import { useHttp } from "../hooks/http.hook";
 import { useMessage } from "../hooks/message.hook";
@@ -15,12 +16,13 @@ export const CreateTextPage = () => {
   const jwt = require("jsonwebtoken");
   const { loading, request, error, clearError } = useHttp();
   const [numberOfChapters, setNumberOfChapters] = useState(0);
-  const [chpatersImages, setChaptersImages] = useState([]);
+  const [chaptersImages, setChaptersImages] = useState([]);
   const [chapters, setChapters] = useState([]);
   const [summary, setSummary] = useState("");
   const [imagesLoading, setImagesLoading] = useState([]);
+  const [drag, setDrag] = useState(false);
   const theme = localStorage.getItem("theme-color");
-  const author = useParams().id
+  const author = useParams().id;
 
   var isCurrentUserAdmin = false;
   if (auth.token) {
@@ -32,17 +34,57 @@ export const CreateTextPage = () => {
           console.log("Срок действия токена закончен");
           history.goBack();
           auth.logout();
-        }else{
-          isCurrentUserAdmin = decoded.isAdmin
+        } else {
+          isCurrentUserAdmin = decoded.isAdmin;
         }
       }
     );
   }
   //console.log(auth.username)
 
-  if(!(auth.userId === author || isCurrentUserAdmin)){
-    history.goBack()
+  if (!(auth.userId === author || isCurrentUserAdmin)) {
+    history.goBack();
   }
+
+  const getUserData = useCallback(async () => {
+    try {
+      //console.log(userIdParams)
+
+      const data = await request(`/api/auth/user/${auth.userId}`, "GET", null);
+      //console.log(data);
+      //   setForm({_id, username, avatar, email, isBanned, isAdmin, texts})
+      checkUserStatus();
+    } catch (e) {
+      console.log(e.message);
+    }
+  }, [auth.userId, request]);
+
+  useEffect(() => {
+    getUserData();
+  }, [getUserData]);
+
+  const checkUserStatus = async () => {
+    if (auth && auth.userId) {
+      try {
+        const data = await request(
+          `/api/auth/user/${auth.userId}`,
+          "get",
+          null,
+          {
+            Authorization: `Bearer ${auth.token}`,
+          }
+        );
+        if (data.isBanned) {
+          message("Вы были забанены!");
+          auth.logout();
+          history.push("/main");
+        }
+      } catch (e) {
+        message("User doesn't exist");
+        auth.logout();
+      }
+    }
+  };
 
   const [form, setForm] = useState({
     title: "",
@@ -61,9 +103,9 @@ export const CreateTextPage = () => {
       likes: [],
     });
     console.log(chapters);
-    chpatersImages.push(null);
+    chaptersImages.push({ name: null, url: null });
     setChaptersImages(
-      chpatersImages.map((chapterImage) => {
+      chaptersImages.map((chapterImage) => {
         return chapterImage;
       })
     );
@@ -90,9 +132,9 @@ export const CreateTextPage = () => {
 
   useEffect(() => {
     console.log("chpatersImages: ");
-    console.log(chpatersImages);
+    console.log(chaptersImages);
     console.log(chapters);
-  }, [chpatersImages]);
+  }, [chaptersImages]);
 
   const redirectToUserPage = () => {
     history.push("/user");
@@ -168,11 +210,13 @@ export const CreateTextPage = () => {
   };
 
   const addImagetoChapterHandler = (props) => {
-    const { event, index } = props;
-    const file = event.target.files[0];
+    // const { event, index } = props;
+    // const file = event.target.files[0];
+    const { file, index } = props;
     console.log("index: " + index);
     console.log("event.files[0]: ");
-    console.log(event.target.files[0]);
+    // console.log(event.target.files[0]);
+    console.log(file)
 
     uploadImage(file, index);
 
@@ -187,33 +231,11 @@ export const CreateTextPage = () => {
         data.append("file", file);
         data.append("upload_preset", "fanficSiteImages");
 
-        // console.log(data.getAll('file'))
-
-        // const jsonedData = JSON.stringify(data)
-
-        // console.log(jsonedData)
-
-        // const reader = new FileReader()
-        // reader.readAsDataURL(file)
-        // reader.onloadend = () => {
-        //    console.log(reader.result)
-        // }
-
-        //const data = reader.result
-
-        // console.log(JSON.stringify(reader.result))
-
         console.log(data);
 
-        // const upload = await request('/api/image/uploadChapterImage', 'POST', )
-        setImagesLoading(
-          imagesLoading.map((imageLoading, indexOfChapter) => {
-            if (indexOfChapter === index) {
-              return true;
-            }
-            return imageLoading;
-          })
-        );
+        imagesLoading[index] = true;
+
+        setImagesLoading(imagesLoading.map((imageLoading) => imageLoading));
 
         const response = await fetch(
           "https://api.cloudinary.com/v1_1/ignatcloud/image/upload",
@@ -222,30 +244,24 @@ export const CreateTextPage = () => {
             body: data,
           }
         );
-
         const upload = await response.json();
 
-        setImagesLoading(
-          imagesLoading.map((imageLoading, indexOfChapter) => {
-            if (indexOfChapter === index) {
-              return false;
-            }
-            return imageLoading;
-          })
-        );
+        imagesLoading[index] = false;
+
+        setImagesLoading(imagesLoading.map((imageLoading) => imageLoading));
 
         console.log(upload.secure_url);
 
-        chpatersImages[index] = upload.secure_url;
+        chaptersImages[index] = { name: file.name, url: upload.secure_url };
         setChaptersImages(
-          chpatersImages.map((chapterImage) => {
+          chaptersImages.map((chapterImage) => {
             return chapterImage;
           })
         );
 
         setChapters(
           chapters.map((chapter, index) => {
-            chapter.chapterImage = chpatersImages[index];
+            chapter.chapterImage = chaptersImages[index];
             return chapter;
           })
         );
@@ -259,7 +275,34 @@ export const CreateTextPage = () => {
     console.log("imagesLoading: " + imagesLoading);
   }, [imagesLoading]);
 
+  function dragStartHandler(e) {
+    e.preventDefault();
+    setDrag(true);
+  }
+
+  function dragLeaveHandler(e) {
+    e.preventDefault();
+    setDrag(false);
+  }
+
+  function onDropHandler(props) {
+    const {event, index} = props
+    event.preventDefault();
+    const files = [...event.dataTransfer.files];
+    console.log(files);
+    console.log("index: " + index)
+    //uploadAvatarImage(files[0]);
+    setDrag(false);
+    addImagetoChapterHandler({file: files[0], index})
+  }
+
+  useEffect(() => {
+    console.log(drag);
+  }, [drag]);
+
   return (
+    <>
+    <Navbar windowPage="/createTextPage"></Navbar>
     <DragDropContext
       onDragEnd={(params) => {
         // console.log(params.source.index + "th item isDragging to " + params.destination.index)
@@ -271,6 +314,11 @@ export const CreateTextPage = () => {
           chapters.map((chapter, index) => {
             chapter.id = index;
             return chapter;
+          })
+        );
+        setChaptersImages(
+          chapters.map((chapter) => {
+            return chapter.chapterImage;
           })
         );
       }}
@@ -363,26 +411,29 @@ export const CreateTextPage = () => {
                                   id={"heading" + (index + 1)}
                                 >
                                   <div className="d-flex justify-content-between">
-                                    <div className="d-flex">
+                                    <div className="d-flex my-auto">
                                       <div className="card chapterCardOnCreatePage py-2 ps-3 mb-1">
                                         <div className="d-flex justify-content-between">
                                           <div className="d-flex">
-                                            <h6 className="pt-2">
+                                            <h6
+                                              className="my-auto"
+                                              style={{ width: "30%" }}
+                                            >
                                               Глава {index + 1}:{" "}
                                             </h6>
                                             <input
-                                              className="form-control "
+                                              className="form-control my-auto chapterTitleInput"
                                               id={"chapterTitle" + (index + 1)}
                                               name={
                                                 "chapterTitle" + (index + 1)
                                               }
                                               type="text"
                                               placeholder="Title"
-                                              style={{
-                                                width: "18rem",
-                                                marginLeft: "1rem",
-                                                height: "2.5rem",
-                                              }}
+                                              // style={{
+                                              //   width: "18rem",
+                                              //   marginLeft: "1rem",
+                                              //   height: "2.5rem",
+                                              // }}
                                               // required={true}
                                               onChange={changeChapterHandler}
                                               value={
@@ -391,6 +442,86 @@ export const CreateTextPage = () => {
                                               }
                                             ></input>
                                           </div>
+                                          <div className="my-auto">
+                                            {chapter &&
+                                              (chapter.chapterImage == null ? (
+                                                imagesLoading &&
+                                                imagesLoading[index] ? (
+                                                  <div className="my-auto">
+                                                    <Loader></Loader>
+                                                  </div>
+                                                ) : drag ? (
+                                                  <div
+                                                    className="drag-area"
+                                                    onDragStart={(e) =>
+                                                      dragStartHandler(e)
+                                                    }
+                                                    onDragLeave={(e) =>
+                                                      dragLeaveHandler(e)
+                                                    }
+                                                    onDragOver={(e) =>
+                                                      dragStartHandler(e)
+                                                    }
+                                                    onDrop={(event) =>
+                                                      onDropHandler({event, index})
+                                                    }
+                                                  >
+                                                    Загрузить...                                           
+                                                  </div>
+                                                ) : (
+                                                  <div
+                                                    className=""
+                                                    onDragStart={(e) =>
+                                                      dragStartHandler(e)
+                                                    }
+                                                    onDragLeave={(e) =>
+                                                      dragLeaveHandler(e)
+                                                    }
+                                                    onDragOver={(e) =>
+                                                      dragStartHandler(e)
+                                                    }
+                                                    onDrop={(event) =>
+                                                      onDropHandler({event, index})
+                                                    }
+                                                  >
+                                                    <label
+                                                      className="btn btn-outline-dark inputImageLabel"
+                                                      for={`chapterImage${
+                                                        index + 1
+                                                      }file`}
+                                                    >
+                                                      <text>Upload Image</text>
+                                                    </label>
+                                                    <input
+                                                      className="my-auto fileInput"
+                                                      id={`chapterImage${
+                                                        index + 1
+                                                      }file`}
+                                                      type="file"
+                                                      onChange={(e) =>
+                                                        addImagetoChapterHandler(
+                                                          {
+                                                            index,
+                                                            file: e.target.files[0],
+                                                          }
+                                                        )
+                                                      }
+                                                    ></input>
+                                                  </div>
+                                                )
+                                              ) : (
+                                                <div className="">
+                                                <p className="imageNameClass my-auto">
+                                                  {chaptersImages[index] &&
+                                                    chaptersImages[index]
+                                                      .name}{" "}                                                  
+                                                </p>
+                                                <text className="textLoaded">Loaded</text>
+                                                </div>
+                                                
+                                              ))}
+                                          </div>
+
                                           <button
                                             className="accordion-button collapsed rounded-circle me-2 d-flex justify-content-center"
                                             type="button"
@@ -436,49 +567,24 @@ export const CreateTextPage = () => {
                                         ></button>
                                       )}
                                     </div>
-                                    {chapter &&
-                                      (chapter.chapterImage == null ? (
-                                        imagesLoading &&
-                                        imagesLoading[index] ? (
-                                          <div className="my-auto">
-                                            <Loader></Loader>
-                                          </div>
-                                        ) : (
-                                          <input
-                                            className="my-auto"
-                                            id={`chapterImage${index + 1}`}
-                                            type="file"
-                                            onChange={(e) =>
-                                              addImagetoChapterHandler({
-                                                index,
-                                                event: e,
-                                              })
-                                            }
-                                          ></input>
-                                        )
-                                      ) : (
-                                        <span className="my-auto">Loaded</span>
-                                      ))}
                                   </div>
                                 </div>
                                 <div
                                   id={"collapse" + (index + 1)}
-                                  className="accordion-collapse collapse mb-1"
+                                  className="accordion-collapse collapse mb-1 chapterAccordionCollapse"
                                   aria-labelledby={"heading" + (index + 1)}
                                   data-bs-parent={
                                     "#chaptersAccordion" + (index + 1)
                                   }
-                                  style={{ width: "40rem" }}
                                 >
                                   <div className="accordion-body">
                                     <textarea
                                       id={"chapterContent" + (index + 1)}
                                       name={"chapterContent" + (index + 1)}
-                                      className="form-control"
+                                      className="form-control chapterContentArea"
                                       type="text"
                                       onChange={changeChapterHandler}
                                       style={{
-                                        width: "40rem",
                                         marginLeft: "-1.3rem",
                                         marginTop: "-1rem",
                                         marginBottom: "-1rem",
@@ -519,5 +625,6 @@ export const CreateTextPage = () => {
         </div>
       </div>
     </DragDropContext>
+    </>
   );
 };

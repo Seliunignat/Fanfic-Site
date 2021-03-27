@@ -62,6 +62,7 @@ export const Navbar = (props) => {
         }else if(document.body.className === '' && theme === 'dark'){
             document.body.className = 'dark'
         }
+        updateUserTheme()
     }, [theme])
 
     const changeModeHandler = () => {
@@ -72,7 +73,18 @@ export const Navbar = (props) => {
         else{
             setTheme('light')
         }
-        localStorage.setItem('theme-color', theme)
+        // localStorage.setItem('theme-color', theme)
+        
+    }
+
+    const updateUserTheme = async () => {
+        try {
+            console.log(theme)
+            const response = await request(`/api/auth/updateTheme/${auth.userId}`, "POST", {theme}, {Authorization: `Bearer ${auth.token}`})
+            console.log(response.message)
+        } catch (e) {
+            console.log(e.message)
+        }
     }
 
     const changeHandler = (event) =>{

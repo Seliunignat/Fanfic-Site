@@ -91,7 +91,7 @@ router.post(
             {expiresIn: '1h'}
         )
 
-        res.json({token, userId: user.id, username: user.username, isBanned: user.isBanned})
+        res.json({token, userId: user.id, username: user.username, isBanned: user.isBanned, isAdmin: user.isAdmin, themeColor: user.themeColor})
 
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
@@ -138,6 +138,16 @@ router.get("/user/:id", async(req, res) => {
         console.log('Error: ' + e.message)
     }
     
+})
+
+router.post('/updateTheme/:id', auth, async(req, res) => {
+    try {
+        console.log(req.body.theme)
+        await User.updateOne({_id: req.params.id}, {$set: {themeColor: req.body.theme}})
+        res.status(200).json({message: 'Тема обновлена'})
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так при обновлении темы'})
+    }
 })
 
 module.exports = router

@@ -7,7 +7,7 @@ const schema = new Schema({
     author: {type: Types.ObjectId, ref: 'User'},
     date: {type: Date, default: Date.now},
     lastUpdate: {type: Date, default: Date.now},
-    chapters: [{id: Number, chapterTitle: String, chapterContent: String, chapterImage: String, order: Number, likes: [{type: Types.ObjectId, ref:'User'}]}],
+    chapters: [{id: Number, chapterTitle: String, chapterContent: String, chapterImage: {name: String, url: String}, order: Number, likes: [{type: Types.ObjectId, ref:'User'}]}],
     rateValues: [{user: {type: Types.ObjectId, ref:'User'}, rateValue: Number}],
     comments: [{type: Types.ObjectId, ref: 'Comment'}],
     avarageRating: {type: Number, default: 0}

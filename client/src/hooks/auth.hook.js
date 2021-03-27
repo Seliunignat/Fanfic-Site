@@ -10,16 +10,18 @@ export const useAuth = () => {
     const [isAdmin, setIsAdmin] = useState(false)
     const [username, setUsername] = useState(null)
     const [ready, setReady] = useState(false)
+    const [themeColor, setThemeColor] = useState("light")
 
 
 
-    const login = useCallback( (jwtToken, id, username, email, isBanned, isAdmin) => {
+    const login = useCallback( (jwtToken, id, username, email, isBanned, isAdmin, themeColor) => {
         setToken(jwtToken)
         setUserId(id)
         setUsername(username)
         setEmail(email)
         setIsBanned(isBanned)
         setIsAdmin(isAdmin)
+        setThemeColor(themeColor)
 
         localStorage.setItem(storageName, JSON.stringify({
             token: jwtToken,
@@ -29,6 +31,7 @@ export const useAuth = () => {
             isBanned: isBanned,
             isAdmin: isAdmin
         }))
+        localStorage.setItem('theme-color', themeColor)
     },[])
 
     const logout = useCallback(() => {
@@ -39,13 +42,14 @@ export const useAuth = () => {
         setIsBanned(null)
         localStorage.removeItem(storageName)
         localStorage.setItem('theme-color', 'light')
+        document.body.className = ''
     },[])
 
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem(storageName))
 
         if(data && data.token) {
-            login(data.token, data.userId, data.username, data.email, data.isBanned)
+            login(data.token, data.userId, data.username, data.email, data.isBanned, data.themeColor)
         }
         setReady(true)
     }, [login])
