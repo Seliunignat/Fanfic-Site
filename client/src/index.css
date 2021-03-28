@@ -52,6 +52,17 @@ body.dark{
     transition: background-color 0.2s linear;
 }
 
+td{
+    overflow-wrap: break-word;
+}
+
+.text-overflow{
+    display: block;
+    overflow: hidden;
+    white-space: wrap;
+    text-overflow: ellipsis;
+}
+
 .dark .cCenter {
     background-color: var(--darker-color);
     transition: background-color 0.2s linear;
@@ -380,9 +391,10 @@ body.dark{
 .dark .chapterCardOnCreatePage{
     background-color: var(--gray-500);
 }
-/* .dark .btn-close{
-    background-color: darkgrey;
-} */
+
+.dark .adminPageCard{
+    background-color: var(--dark-color);
+}
 
 .dark .fa-user, .dark .fa-eye, .dark .fa-pencil, .dark .fa-home{
     color: var(--light-color);
@@ -559,6 +571,21 @@ body.dark{
     display: none;
 }
 
+.adminPageCard{
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+.loader{
+    display: flex;
+    justify-content: center;
+}
+
+.dark .spinner-border{
+    color: var(--light-color);
+}
+
 @media (min-width: 991px){
     .cardFanfics{
         width: 60rem;
@@ -720,5 +747,8 @@ body.dark{
     .form-control{
         font-size: .8rem;
         height: 75%;
+    }
+    .cellUserId{
+        max-width: 3.2rem;
     }
 }

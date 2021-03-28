@@ -20,6 +20,7 @@ export const TextEditPage = () => {
   const [text, setText] = useState(null);
   const [textTitle, setTextTitle] = useState("");
   const [summary, setSummary] = useState("");
+  const [drag, setDrag] = useState(false);
   const textId = useParams().id;
 
   var isCurrentUserAdmin = false;
@@ -65,13 +66,19 @@ export const TextEditPage = () => {
       order: 0,
       likes: [],
     });
-    setNumberOfChapters(chapters.length);
+    chaptersImages.push({ name: null, url: null });
+    setChaptersImages(
+      chaptersImages.map((chapterImage) => {
+        return chapterImage;
+      })
+    );
     imagesLoading.push(false);
     setChapters(
       chapters.map((chapter) => {
         return chapter;
       })
     );
+    setNumberOfChapters(chapters.length);
   };
 
   useEffect(() => {
@@ -80,12 +87,13 @@ export const TextEditPage = () => {
 
   useEffect(() => {
     // console.log(numberOfChapters);
-    console.log(chapters);
-    //console.log(text)
-    //if(text) {text.chapters = chapters}
-    //console.log(summary)
-    //co
-  }, [chapters, numberOfChapters, summary, text]);
+    // console.log(chapters);
+    setChaptersImages(
+      chapters.map((chapter) => {
+        return chapter.chapterImage;
+      })
+    );
+  }, [chapters, numberOfChapters]);
 
   useEffect(() => {
     console.log(chaptersImages);
@@ -100,11 +108,12 @@ export const TextEditPage = () => {
   };
 
   const addImagetoChapterHandler = (props) => {
-    const { event, index } = props;
-    const file = event.target.files[0];
+    // const { event, index } = props;
+    // const file = event.target.files[0];
+    const { file, index } = props;
     console.log("index: " + index);
     console.log("event.files[0]: ");
-    console.log(event.target.files[0]);
+    // console.log(event.target.files[0]);
 
     uploadImage(file, index);
 
@@ -153,6 +162,9 @@ export const TextEditPage = () => {
             return chapter;
           })
         );
+
+        await request(`/api/text/${textId}/updateChaptersImages`, 'POST', {chaptersImages})
+
       } catch (e) {
         console.log(e.message);
       }
@@ -228,6 +240,31 @@ export const TextEditPage = () => {
   if (text && auth.username !== text.author.username && !isCurrentUserAdmin) {
     dontHavePermission();
   }
+
+  function dragStartHandler(e) {
+    e.preventDefault();
+    setDrag(true);
+  }
+
+  function dragLeaveHandler(e) {
+    e.preventDefault();
+    setDrag(false);
+  }
+
+  function onDropHandler(props) {
+    const {event, index} = props
+    event.preventDefault();
+    const files = [...event.dataTransfer.files];
+    console.log(files);
+    console.log("index: " + index)
+    //uploadAvatarImage(files[0]);
+    setDrag(false);
+    addImagetoChapterHandler({file: files[0], index})
+  }
+
+  useEffect(() => {
+    console.log(drag);
+  }, [drag]);
 
   if (loading) {
     return <Loader />;
@@ -387,6 +424,85 @@ export const TextEditPage = () => {
                                               }
                                             ></input>
                                           </div>
+                                          <div className="my-auto">
+                                            {chapter &&
+                                              (chapter.chapterImage == null ? (
+                                                imagesLoading &&
+                                                imagesLoading[index] ? (
+                                                  <div className="my-auto">
+                                                    <Loader></Loader>
+                                                  </div>
+                                                ) : drag ? (
+                                                  <div
+                                                    className="drag-area"
+                                                    onDragStart={(e) =>
+                                                      dragStartHandler(e)
+                                                    }
+                                                    onDragLeave={(e) =>
+                                                      dragLeaveHandler(e)
+                                                    }
+                                                    onDragOver={(e) =>
+                                                      dragStartHandler(e)
+                                                    }
+                                                    onDrop={(event) =>
+                                                      onDropHandler({event, index})
+                                                    }
+                                                  >
+                                                    Загрузить...                                           
+                                                  </div>
+                                                ) : (
+                                                  <div
+                                                    className=""
+                                                    onDragStart={(e) =>
+                                                      dragStartHandler(e)
+                                                    }
+                                                    onDragLeave={(e) =>
+                                                      dragLeaveHandler(e)
+                                                    }
+                                                    onDragOver={(e) =>
+                                                      dragStartHandler(e)
+                                                    }
+                                                    onDrop={(event) =>
+                                                      onDropHandler({event, index})
+                                                    }
+                                                  >
+                                                    <label
+                                                      className="btn btn-outline-dark inputImageLabel"
+                                                      for={`chapterImage${
+                                                        index + 1
+                                                      }file`}
+                                                    >
+                                                      <text>Upload Image</text>
+                                                    </label>
+                                                    <input
+                                                      className="my-auto fileInput"
+                                                      id={`chapterImage${
+                                                        index + 1
+                                                      }file`}
+                                                      type="file"
+                                                      onChange={(e) =>
+                                                        addImagetoChapterHandler(
+                                                          {
+                                                            index,
+                                                            file: e.target.files[0],
+                                                          }
+                                                        )
+                                                      }
+                                                    ></input>
+                                                  </div>
+                                                )
+                                              ) : (
+                                                <div className="">
+                                                <p className="imageNameClass my-auto">
+                                                  {chaptersImages[index] &&
+                                                    chaptersImages[index]
+                                                      .name}{" "}                                                  
+                                                </p>
+                                                <text className="textLoaded">Loaded</text>
+                                                </div>
+                                                
+                                              ))}
+                                          </div>
                                           <button
                                             className="accordion-button collapsed rounded-circle me-2 d-flex justify-content-center "
                                             type="button"
@@ -430,7 +546,7 @@ export const TextEditPage = () => {
                                         ></button>
                                       )}
                                     </div>
-                                    {chapter &&
+                                    {/* {chapter &&
                                       (chapter.chapterImage == null ? (
                                         imagesLoading &&
                                         imagesLoading[index] ? (
@@ -456,7 +572,7 @@ export const TextEditPage = () => {
                                             chaptersImages[index].name}{" "}
                                           Loaded
                                         </span>
-                                      ))}
+                                      ))} */}
                                   </div>
                                   <div
                                     id={"collapse" + (index + 1)}

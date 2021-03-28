@@ -192,6 +192,19 @@ router.post('/updateChapterLikesInText/:id', auth, async(req, res) => {
     }
 });
 
+router.post('/:id/updateChaptersImages', async(req, res) => {
+    try {
+        const {chaptersImages} = req.body
+        var chapters = (await Text.findById(req.params.id)).chapters
+        chapters.forEach((chapter, index) => {
+            chapter.chapterImage = chaptersImages[index]
+        })
+        await Text.updateOne({_id: req.params.id}, {$set : {chapters: chapters}})
+    } catch (e) {
+        
+    }
+})
+
 
 router.delete('/delete/:id', async (req, res) => {
     try {

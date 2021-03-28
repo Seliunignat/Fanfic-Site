@@ -28,8 +28,7 @@ export const useAuth = () => {
             userId: id, 
             username: username,
             email: email,
-            isBanned: isBanned,
-            isAdmin: isAdmin
+            isBanned: isBanned
         }))
         localStorage.setItem('theme-color', themeColor)
     },[])
@@ -47,12 +46,15 @@ export const useAuth = () => {
 
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem(storageName))
+        const theme = localStorage.getItem('theme-color')
+        console.log("theme")
+        console.log(theme)
 
         if(data && data.token) {
-            login(data.token, data.userId, data.username, data.email, data.isBanned, data.themeColor)
+            login(data.token, data.userId, data.username, data.email, data.isBanned, null, theme)
         }
         setReady(true)
     }, [login])
 
-    return ({login, logout, token, userId, username, email, isBanned, ready})
+    return ({login, logout, token, userId, username, email, isBanned, isAdmin, ready})
 }

@@ -8,7 +8,8 @@ const schema = new Schema({
     isBanned: {type: Boolean, required: true},
     isAdmin: {type: Boolean, required: true},
     texts: [{type: Types.ObjectId, ref: 'Text', default: ""}],
-    themeColor: {type: String, default: 'light'}
+    themeColor: {type: String, default: 'light'},
+    registrationDate: {type: Date, default: Date.now}
 })
 
 module.exports = model('User', schema)

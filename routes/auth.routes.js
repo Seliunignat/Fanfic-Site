@@ -140,13 +140,42 @@ router.get("/user/:id", async(req, res) => {
     
 })
 
+router.get('/getAllUsers', auth, async(req, res) => {
+    try {
+        const users = await User.find({})
+        res.json(users)
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+    }
+})
+
 router.post('/updateTheme/:id', auth, async(req, res) => {
     try {
-        console.log(req.body.theme)
+        // console.log(req.body.theme)
         await User.updateOne({_id: req.params.id}, {$set: {themeColor: req.body.theme}})
         res.status(200).json({message: 'Тема обновлена'})
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так при обновлении темы'})
+    }
+})
+
+router.post('/updateUserBanStatus/:id', auth, async(req, res) => {
+    try {
+        const isBanned = req.body.isBanned
+        await User.updateOne({_id: req.params.id}, {$set : {isBanned: isBanned}})
+        res.json({message: "Статус пользователя обновлен"})
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так при обновлении статуса пользователя'})
+    }
+})
+
+router.post('/updateUserAdminStatus/:id', auth, async(req, res) => {
+    try {
+        const isAdmin = req.body.isAdmin
+        await User.updateOne({_id: req.params.id}, {$set : {isAdmin: isAdmin}})
+        res.json({message: "Статус пользователя обновлен"})
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так при обновлении статуса пользователя'})
     }
 })
 

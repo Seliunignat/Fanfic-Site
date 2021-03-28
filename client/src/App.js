@@ -10,7 +10,7 @@ import { Loader } from "./components/Loader";
 
 
 function App() {
-    const {token, login, logout, userId, username, email, isBanned, ready} =  useAuth()
+    const {token, login, logout, userId, username, email, isBanned, isAdmin, ready} =  useAuth()
     console.log("token: " + token)
     const isAuthenticated = !!token
     const routes = useRoutes(isAuthenticated)
@@ -20,7 +20,7 @@ function App() {
     }
 
     return (
-      <AuthContext.Provider value={{token, login, logout, userId, isAuthenticated, isBanned, username}}>
+      <AuthContext.Provider value={{token, login, logout, userId, isAuthenticated, isBanned, isAdmin, username}}>
         <Router>
           {/* <Navbar isAuthenticated={isAuthenticated}></Navbar> */}
           <>

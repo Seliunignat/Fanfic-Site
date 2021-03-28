@@ -9,6 +9,7 @@ import { TextViewPage } from './pages/TextViewPage'
 import { TextEditPage } from './pages/TextEditPage'
 import { TestPage } from './pages/TestPage'
 import { SearchResultsPage } from './pages/SearchResultsPage'
+import { AdminPage } from './pages/AdminPage'
 
 
 export const useRoutes = isAuthenticated => {
@@ -36,6 +37,9 @@ export const useRoutes = isAuthenticated => {
                 </Route>
                 <Route path="/search/results/:text">
                     <SearchResultsPage></SearchResultsPage>
+                </Route>
+                <Route path="/adminPage">
+                    <AdminPage />
                 </Route>
                 <Redirect to="/main"></Redirect>
             </Switch>
