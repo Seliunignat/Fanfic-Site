@@ -213,7 +213,7 @@ export const TextViewPage = () => {
           </div>
 
           <div className="d-flex my-2 mx-1">
-            <div className="col-md-2 col-lg-2">
+            <div className="col-4 col-md-2 col-lg-2">
               <div className="d-flex border-end" style={{ maxHeight: "20rem" }}>
                 <div
                   className="list-group"
@@ -245,7 +245,7 @@ export const TextViewPage = () => {
               </div>
             </div>
 
-            <div className="col-8 col-md-9 col-lg-9">
+            <div className="col-8 col-md-10 col-lg-10">
               <div className="tab-content " id="nav-tabContent">
                 {text &&
                   chapters &&
