@@ -68,6 +68,26 @@ td{
     transition: background-color 0.2s linear;
 }
 
+.userLinkOnAdminPage{
+    color: black;
+    padding: .2rem;
+    margin-right: none;
+}
+
+.userLinkOnAdminPage:hover{
+    background-color: var(--light-color-hover);
+    border-radius: 5px;
+    
+}
+
+.dark .userLinkOnAdminPage{
+    color: var(--light-color);
+}
+
+.dark .userLinkOnAdminPage:hover{
+    color: var(--dark-color);
+}
+
 .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark span, .dark li{
     color: var(--light-color);
 }
@@ -562,6 +582,7 @@ td{
     background: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg') center no-repeat;
     height: 15rem;
 }
+
 
 .inputImageLabel{
     

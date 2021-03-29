@@ -260,7 +260,7 @@ export const AdminPage = () => {
                             }}
                           ></input>
                         </td>
-                        <td className="cellUserId"><span className="text-overflow">{user._id}</span></td>
+                        <td className="cellUserId"><a className="userLinkOnAdminPage" href={`/user/${user._id}`} style={{textDecoration: 'none'}}>{user._id}</a></td>
                         <td>{user.username}</td>
                         <td>
                           {new Date(user.registrationDate).toLocaleString()}
