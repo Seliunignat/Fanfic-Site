@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
+import { useHistory } from "react-router";
 import { useAuth } from "../hooks/auth.hook";
 import { useHttp } from "../hooks/http.hook";
 import { Loader } from "./Loader";
@@ -12,6 +13,7 @@ export const CommentsSection = (props) => {
   const auth = useContext(AuthContext);
   const [commentContent, setCommentContent] = useState("");
   const [comments, setComments] = useState([]);
+  const history = useHistory();
 
   const [leavingComment, setLeavingComment] = useState({
     author: auth.userId,
@@ -21,8 +23,8 @@ export const CommentsSection = (props) => {
 
   const getComments = useCallback(async () => {
     try {
-        // console.log("get comments...")
-    //   console.log("textId" + textId);
+      // console.log("get comments...")
+      //   console.log("textId" + textId);
       const fethcedComments = await request(
         `/api/comment/getCommentsOfText/${textId}`,
         "GET",
@@ -31,12 +33,10 @@ export const CommentsSection = (props) => {
       // console.log(fethcedComments)
 
       setComments(fethcedComments);
-    
     } catch (e) {
       console.log(e.message);
     }
   }, [request, textId]);
-
 
   useEffect(() => {
     getComments();
@@ -44,13 +44,13 @@ export const CommentsSection = (props) => {
 
   useEffect(() => {
     // console.log(comments);
-    setTimeout(getCommentsInInterval, 5000)
+    setTimeout(getCommentsInInterval, 5000);
   }, [comments]);
 
   const getCommentsInInterval = async () => {
     try {
-        // console.log("get comments...")
-        //   console.log("textId" + textId);
+      // console.log("get comments...")
+      //   console.log("textId" + textId);
       const fethcedComments = await request(
         `/api/comment/getCommentsOfText/${textId}`,
         "GET",
@@ -59,8 +59,6 @@ export const CommentsSection = (props) => {
       // console.log(fethcedComments)
 
       setComments(fethcedComments);
-
-      
     } catch (e) {
       console.log(e.message);
     }
@@ -84,9 +82,9 @@ export const CommentsSection = (props) => {
       );
       // console.log(commentFetched.message);
 
-      setCommentContent(""); 
-        
-        getComments()
+      setCommentContent("");
+
+      getComments();
     } catch (e) {
       console.log(e.message);
     }
@@ -103,16 +101,18 @@ export const CommentsSection = (props) => {
           <h4 className="ms-3 mt-2">Add comment</h4>
           <div className="d-flex ms-3 mb-3 me-3">
             <input
-              className="form-control"
+              className="form-control my-auto"
               name="content"
               type="text"
-              placeholder="Enter comment"
+              placeholder={auth.isAuthenticated ? "Enter comment" : "Войдите, чтобы оставлять комментарии"}
               value={commentContent && commentContent}
               onChange={changehandler}
+              disabled={!auth.isAuthenticated}
             ></input>
             <button
               className="btn btn-primary my-auto ms-2"
               onClick={leaveCommentHandler}
+              disabled={!auth.isAuthenticated}
             >
               <FaArrowRight></FaArrowRight>
             </button>
@@ -120,22 +120,31 @@ export const CommentsSection = (props) => {
         </div>
       </div>
       <div className="cCenterCommentSection">
-        <div className="commentCardInCommentSection">
+        <div className="">
           {comments &&
             comments.map((comment) => {
               return (
-                <div className="card shadow-sm mb-2 px-2">
-                  <div className="d-flex border-bottom py-2">
-                    <img
-                      className="rounded-circle"
-                      src={comment && comment.author.avatar}
-                      style={{ width: "35px", height: "35px" }}
-                    ></img>
-                    <span className="ms-1 my-auto">
-                      {comment && comment.author.username}
-                    </span>
+                <div className="card commentCardInCommentSection shadow-sm mb-2 px-2">
+                  <div
+                    className="d-flex border-bottom py-1"
+                    onClick={() =>
+                      history.push(`/user/${comment && comment.author._id}`)
+                    }
+                  >
+                    <div className="userAvatarUsernameOnCommentCard">
+                      <img
+                        className="rounded-circle"
+                        src={comment && comment.author.avatar}
+                        style={{ width: "35px", height: "35px" }}
+                      ></img>
+                      <text className="ms-1 my-auto">
+                        {comment && comment.author.username}
+                      </text>
+                    </div>
                   </div>
-                  <div className="mx-2 mt-2">{comment.content}</div>
+                  <div className="mx-2 mt-2">
+                    <text>{comment.content}</text>
+                  </div>
                   <div className="d-flex justify-content-end mb-2">
                     <text style={{ opacity: 0.8, fontSize: "0.9rem" }}>
                       {comment && new Date(comment.date).toLocaleString()}

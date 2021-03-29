@@ -58,7 +58,7 @@ export const TextViewPage = () => {
       function (error, decoded) {
         if (error) {
           console.log("Срок действия токена закончен");
-          message("Срок действия токена закончен")
+          message("Срок действия токена закончен");
           history.goBack();
           auth.logout();
         } else {
@@ -204,13 +204,16 @@ export const TextViewPage = () => {
                 <ReactStars {...withoutAuth}></ReactStars>
               )}
             </div>
-            <text className="my-auto me-2">
-              Author: {text && text.author.username}
-            </text>
+            <div className="d-flex justify-content-end userAvatarUsernameOnCommentCard my-auto me-2" onClick={() => history.push(`/user/${text.author._id}`)}>
+              <i className="fa fa-user onTextEditPage my-auto p-0 me-1"></i>
+              <text className="">
+                {text && text.author.username}
+              </text>
+            </div>
           </div>
 
           <div className="d-flex my-2 mx-1">
-            <div className="col-4">
+            <div className="col-md-2 col-lg-2">
               <div className="d-flex border-end" style={{ maxHeight: "20rem" }}>
                 <div
                   className="list-group"
@@ -242,7 +245,7 @@ export const TextViewPage = () => {
               </div>
             </div>
 
-            <div className="col-8">
+            <div className="col-8 col-md-9 col-lg-9">
               <div className="tab-content " id="nav-tabContent">
                 {text &&
                   chapters &&

@@ -36,6 +36,18 @@ body.dark{
     padding-bottom: .3rem;
 }
 
+.list-group-item.active{
+    z-index: 0;
+}
+
+.dark .list-group-item{
+    background-color: var(--gray-500);
+}
+
+.dark .list-group-item.active{
+    background-color: var(--blue-500)
+}
+
 .cCenter {
     display: flex;
     justify-content: center;
@@ -88,7 +100,7 @@ td{
     color: var(--dark-color);
 }
 
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark span, .dark li{
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6, .dark span, .dark li, .dark text{
     color: var(--light-color);
 }
 
@@ -132,6 +144,10 @@ td{
     background-color: var(--light-gray);
     transition: background-color 0.2s linear;
     z-index: 0;
+}
+
+.dark .cCenterCommentSection{
+    background-color: var(--darker-color);
 }
 
 .centeredElement{
@@ -297,6 +313,20 @@ td{
     background: var(--light-color-hover);
 }
 
+.userAvatarUsernameOnCommentCard{
+    cursor: pointer;
+    border-radius: 5px;
+    padding: .2rem;
+}
+
+.userAvatarUsernameOnCommentCard:hover{
+    background: var(--light-color-hover);
+}
+
+.dark .userAvatarUsernameOnCommentCard:hover{
+    background: var(--gray-500);
+}
+
 .dark .userAvatarUsernameOnFanficCard:hover{
     opacity: 1;
     background: var(--gray-500);
@@ -308,6 +338,10 @@ td{
 
 .commentCardInCommentSection{
     width: 35rem
+}
+
+.dark .commentCardInCommentSection{
+    background-color: var(--dark-color);
 }
 
 .dark .userImageSection{
@@ -404,6 +438,10 @@ td{
     /* position: absolute; */
 }
 
+.dark .leaveCommentCard {
+    background-color: var(--dark-color);
+}
+
 .dark .mainCard_CreatePage{
     background-color: var(--dark-color);
 }
@@ -432,6 +470,11 @@ td{
 
 .fa-user.onTextEditPage{
     color: black;
+    font-size: 15px
+}
+
+.dark .fa-user.onTextEditPage{
+    color: var(--light-color);
     font-size: 15px
 }
 
@@ -767,7 +810,7 @@ td{
     }
     .form-control{
         font-size: .8rem;
-        height: 75%;
+        height: 80%;
     }
     .cellUserId{
         max-width: 3.2rem;
