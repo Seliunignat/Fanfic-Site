@@ -32,6 +32,7 @@ export const UserPage = () => {
       function (error, decoded) {
         if (error) {
           console.log("Срок действия токена закончен");
+          message("Срок действия токена закончен")
           history.goBack();
           auth.logout();
         } else {
@@ -43,7 +44,7 @@ export const UserPage = () => {
     // console.log(dataFromToken)
   }
 
-  console.log("isCurrentUserAdmin" + isCurrentUserAdmin);
+  // console.log("isCurrentUserAdmin" + isCurrentUserAdmin);
 
   const getUserData = useCallback(async () => {
     try {
@@ -104,7 +105,7 @@ export const UserPage = () => {
   function onDropHandler(e) {
     e.preventDefault();
     const files = [...e.dataTransfer.files];
-    console.log(files);
+    // console.log(files);
     uploadAvatarImage(files[0]);
     setDrag(false);
   }
@@ -128,7 +129,7 @@ export const UserPage = () => {
 
         const upload = await response.json();
 
-        console.log(upload.secure_url);
+        // console.log(upload.secure_url);
 
         const updateUserAvatar = await request(
           `/api/auth/updateAvatar/${auth.userId}`,

@@ -49,7 +49,7 @@ export const CommentsSection = (props) => {
 
   const getCommentsInInterval = async () => {
     try {
-        console.log("get comments...")
+        // console.log("get comments...")
         //   console.log("textId" + textId);
       const fethcedComments = await request(
         `/api/comment/getCommentsOfText/${textId}`,
@@ -71,7 +71,7 @@ export const CommentsSection = (props) => {
   };
 
   useEffect(() => {
-    console.log(commentContent);
+    // console.log(commentContent);
   }, [commentContent]);
 
   const leaveCommentHandler = async () => {
@@ -82,7 +82,7 @@ export const CommentsSection = (props) => {
         { author: auth.userId, textId: textId, content: commentContent },
         { Authorization: `Bearer ${auth.token}` }
       );
-      console.log(commentFetched.message);
+      // console.log(commentFetched.message);
 
       setCommentContent(""); 
         

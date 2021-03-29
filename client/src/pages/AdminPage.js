@@ -63,7 +63,7 @@ export const AdminPage = () => {
   const checkUserStatus = async () => {
     if (auth && auth.userId) {
       try {
-        console.log(auth.userId);
+        // console.log(auth.userId);
         const data = await request(
           `/api/auth/user/${auth.userId}`,
           "get",
@@ -72,7 +72,7 @@ export const AdminPage = () => {
             Authorization: `Bearer ${auth.token}`,
           }
         );
-        console.log("data.isBanned " + data.isBanned);
+        // console.log("data.isBanned " + data.isBanned);
         if (data.isBanned) {
           message("Вы были забанены!");
           auth.logout();
@@ -100,7 +100,7 @@ export const AdminPage = () => {
   };
 
   useEffect(() => {
-    console.log(users);
+    // console.log(users);
   }, [users]);
 
   useEffect(() => {

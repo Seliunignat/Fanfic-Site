@@ -26,7 +26,7 @@ export const Navbar = (props) => {
   // console.log(auth)
 
   if (auth && auth.isBanned) {
-    console.log("isBanned: " + auth.isBanned);
+    // console.log("isBanned: " + auth.isBanned);
     message("Вы были ЗАБАНЕНЫ!");
     auth.logout();
   }
@@ -51,14 +51,14 @@ export const Navbar = (props) => {
 
   useEffect(() => {
     if (auth.username) {
-      console.log("auth: " + auth.username);
+      // console.log("auth: " + auth.username);
       setCurrentUserName(auth.username);
       return;
     }
   }, [auth.username]);
 
   useEffect(() => {
-    console.log("themeColor: " + theme);
+    // console.log("themeColor: " + theme);
     localStorage.setItem("theme-color", theme);
     updateUserTheme();
     if (document.body.className === "dark" && theme === "light") {
@@ -81,14 +81,14 @@ export const Navbar = (props) => {
   const updateUserTheme = async () => {
     if (auth && auth.userId) {
       try {
-        console.log(theme);
+        // console.log(theme);
         const response = await request(
           `/api/auth/updateTheme/${auth.userId}`,
           "POST",
           { theme },
           { Authorization: `Bearer ${auth.token}` }
         );
-        console.log(response.message);
+        // console.log(response.message);
       } catch (e) {
         console.log(e.message);
       }
@@ -100,12 +100,12 @@ export const Navbar = (props) => {
   };
 
   useEffect(() => {
-    console.log(queryStringValue);
+    // console.log(queryStringValue);
   }, [queryStringValue]);
 
   const searchHandler = (event) => {
     event.preventDefault();
-    console.log(queryStringValue);
+    // console.log(queryStringValue);
     history.push(`/search/results/${queryStringValue}`);
     //event.target.reset()
   };

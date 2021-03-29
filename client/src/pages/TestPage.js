@@ -8,7 +8,7 @@ export const TestPage = () => {
     const getTexts = useCallback( async () => {
         try {
             const fetched = await request('/api/text/latest', 'GET', null)
-            console.log(fetched)
+            // console.log(fetched)
         } catch (e) {
             console.log(e.message)
         }

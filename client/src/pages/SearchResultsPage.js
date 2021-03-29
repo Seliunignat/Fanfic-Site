@@ -13,7 +13,7 @@ export const SearchResultsPage = (props) => {
   const history = useHistory();
   const params = useParams()
   const [queryString, setQueryString] = useState(params && params.text);
-  console.log(params)
+  // console.log(params)
 
   const search = useCallback(async () => {
     try {
@@ -24,32 +24,32 @@ export const SearchResultsPage = (props) => {
       );
 
       setResults(findedResults.result);
-      console.log(findedResults.result);
+      // console.log(findedResults.result);
     } catch (e) {
       console.log(e.message);
     }
   }, [queryString, request]);
 
   useEffect(() => {
-    console.log(results);
+    // console.log(results);
   }, [results]);
 
   useEffect(() => {
-    console.log(queryString);
+    // console.log(queryString);
     if (queryString) {
       search();
     }
   }, [queryString]);
 
     useEffect(() => {
-        console.log(params.text)
+        // console.log(params.text)
         if(params.text){
             setQueryString(params.text)
         }
     }, [params.text])
 
     useEffect(() => {
-        console.log("loading: " +loading)
+        // console.log("loading: " +loading)
     }, [loading])
 
     if (loading) {

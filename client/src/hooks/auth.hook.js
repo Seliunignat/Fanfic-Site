@@ -47,8 +47,8 @@ export const useAuth = () => {
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem(storageName))
         const theme = localStorage.getItem('theme-color')
-        console.log("theme")
-        console.log(theme)
+        //console.log("theme")
+        //console.log(theme)
 
         if(data && data.token) {
             login(data.token, data.userId, data.username, data.email, data.isBanned, null, theme)

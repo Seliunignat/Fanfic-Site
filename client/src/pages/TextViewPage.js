@@ -36,7 +36,7 @@ export const TextViewPage = () => {
     size: 40,
     value: 0,
     onChange: (newValue) => {
-      console.log(`Example 2: new value is ${newValue}`);
+      // console.log(`Example 2: new value is ${newValue}`);
       setUserIdAndRateValue({ user: auth.userId, rateValue: newValue });
       //postRateValue();
       //setUserIdAndRateValue({userId: auth.userId, rateValue: newValue})
@@ -58,6 +58,7 @@ export const TextViewPage = () => {
       function (error, decoded) {
         if (error) {
           console.log("Срок действия токена закончен");
+          message("Срок действия токена закончен")
           history.goBack();
           auth.logout();
         } else {
@@ -158,7 +159,7 @@ export const TextViewPage = () => {
   useEffect(() => {
     //console.log(firstExample);
     //console.log(userIdAndRateValue.rateValue)
-    console.log(chapters);
+    // console.log(chapters);
   }, [chapters]);
 
   if (loading) {

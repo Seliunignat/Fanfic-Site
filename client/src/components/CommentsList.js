@@ -8,7 +8,7 @@ export const CommentsList = (props) => {
 
   const getComments = useCallback(async () => {
     try {
-      console.log("textId" + textId);
+      // console.log("textId" + textId);
       const fethcedComments = await request(
         `/api/comment/getCommentsOfText/${textId}`,
         "GET",
@@ -27,7 +27,7 @@ export const CommentsList = (props) => {
   }, [getComments]);
 
   useEffect(() => {
-    console.log(comments);
+    // console.log(comments);
   }, [comments]);
 
   return (

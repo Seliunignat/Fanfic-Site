@@ -26,7 +26,7 @@ export const AuthPage = () => {
                 message("User is banned");
                 return;
             }
-            console.log(data.isBanned)
+            // console.log(data.isBanned)
             auth.login(data.token, data.userId, form.username, "", data.isBanned, data.isAdmin, data.themeColor);
         } catch (e) {
             message(e);

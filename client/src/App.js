@@ -11,7 +11,7 @@ import { Loader } from "./components/Loader";
 
 function App() {
     const {token, login, logout, userId, username, email, isBanned, isAdmin, ready} =  useAuth()
-    console.log("token: " + token)
+    // console.log("token: " + token)
     const isAuthenticated = !!token
     const routes = useRoutes(isAuthenticated)
 

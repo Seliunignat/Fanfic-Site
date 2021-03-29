@@ -82,7 +82,7 @@ export const TextEditPage = () => {
   };
 
   useEffect(() => {
-    console.log("imagesLoading: " + imagesLoading);
+    // console.log("imagesLoading: " + imagesLoading);
   }, [imagesLoading]);
 
   useEffect(() => {
@@ -96,7 +96,7 @@ export const TextEditPage = () => {
   }, [chapters, numberOfChapters]);
 
   useEffect(() => {
-    console.log(chaptersImages);
+    // console.log(chaptersImages);
   }, [chaptersImages]);
 
   const redirectToUserPage = () => {
@@ -111,8 +111,8 @@ export const TextEditPage = () => {
     // const { event, index } = props;
     // const file = event.target.files[0];
     const { file, index } = props;
-    console.log("index: " + index);
-    console.log("event.files[0]: ");
+    // console.log("index: " + index);
+    // console.log("event.files[0]: ");
     // console.log(event.target.files[0]);
 
     uploadImage(file, index);
@@ -123,12 +123,12 @@ export const TextEditPage = () => {
   const uploadImage = async (file, index) => {
     if (file) {
       try {
-        console.log(file);
+        // console.log(file);
         const data = new FormData();
         data.append("file", file);
         data.append("upload_preset", "fanficSiteImages");
 
-        console.log(data);
+        // console.log(data);
 
         imagesLoading[index] = true;
 
@@ -147,7 +147,7 @@ export const TextEditPage = () => {
 
         setImagesLoading(imagesLoading.map((imageLoading) => imageLoading));
 
-        console.log(upload.secure_url);
+        // console.log(upload.secure_url);
 
         chaptersImages[index] = { name: file.name, url: upload.secure_url };
         setChaptersImages(
@@ -199,7 +199,7 @@ export const TextEditPage = () => {
 
   const changeSummaryhandler = (event) => {
     text.summary = event.target.value;
-    console.log(text.summary);
+    // console.log(text.summary);
     setSummary(text.summary);
   };
 
@@ -255,15 +255,15 @@ export const TextEditPage = () => {
     const {event, index} = props
     event.preventDefault();
     const files = [...event.dataTransfer.files];
-    console.log(files);
-    console.log("index: " + index)
+    // console.log(files);
+    // console.log("index: " + index)
     //uploadAvatarImage(files[0]);
     setDrag(false);
     addImagetoChapterHandler({file: files[0], index})
   }
 
   useEffect(() => {
-    console.log(drag);
+    // console.log(drag);
   }, [drag]);
 
   if (loading) {

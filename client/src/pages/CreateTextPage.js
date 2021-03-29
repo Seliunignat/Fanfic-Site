@@ -32,6 +32,7 @@ export const CreateTextPage = () => {
       function (error, decoded) {
         if (error) {
           console.log("Срок действия токена закончен");
+          message("Срок действия токена закончен")
           history.goBack();
           auth.logout();
         } else {
@@ -102,7 +103,7 @@ export const CreateTextPage = () => {
       order: 0,
       likes: [],
     });
-    console.log(chapters);
+    // console.log(chapters);
     chaptersImages.push({ name: null, url: null });
     setChaptersImages(
       chaptersImages.map((chapterImage) => {
@@ -131,9 +132,9 @@ export const CreateTextPage = () => {
   useEffect(() => {}, [summary]);
 
   useEffect(() => {
-    console.log("chpatersImages: ");
-    console.log(chaptersImages);
-    console.log(chapters);
+    // console.log("chpatersImages: ");
+    // console.log(chaptersImages);
+    // console.log(chapters);
   }, [chaptersImages]);
 
   const redirectToUserPage = () => {
@@ -191,7 +192,7 @@ export const CreateTextPage = () => {
         },
         { Authorization: `Bearer ${auth.token}` }
       );
-      console.log(data);
+      // console.log(data);
       message(data_req.message);
       if (data_req.message === "Фанфик успешно создан") history.push("/user");
     } catch (e) {}
@@ -213,10 +214,10 @@ export const CreateTextPage = () => {
     // const { event, index } = props;
     // const file = event.target.files[0];
     const { file, index } = props;
-    console.log("index: " + index);
-    console.log("event.files[0]: ");
+    // console.log("index: " + index);
+    // console.log("event.files[0]: ");
     // console.log(event.target.files[0]);
-    console.log(file)
+    // console.log(file)
 
     uploadImage(file, index);
 
@@ -226,12 +227,12 @@ export const CreateTextPage = () => {
   const uploadImage = async (file, index) => {
     if (file) {
       try {
-        console.log(file);
+        // console.log(file);
         const data = new FormData();
         data.append("file", file);
         data.append("upload_preset", "fanficSiteImages");
 
-        console.log(data);
+        // console.log(data);
 
         imagesLoading[index] = true;
 
@@ -250,7 +251,7 @@ export const CreateTextPage = () => {
 
         setImagesLoading(imagesLoading.map((imageLoading) => imageLoading));
 
-        console.log(upload.secure_url);
+        // console.log(upload.secure_url);
 
         chaptersImages[index] = { name: file.name, url: upload.secure_url };
         setChaptersImages(
@@ -272,7 +273,7 @@ export const CreateTextPage = () => {
   };
 
   useEffect(() => {
-    console.log("imagesLoading: " + imagesLoading);
+    // console.log("imagesLoading: " + imagesLoading);
   }, [imagesLoading]);
 
   function dragStartHandler(e) {
@@ -289,15 +290,15 @@ export const CreateTextPage = () => {
     const {event, index} = props
     event.preventDefault();
     const files = [...event.dataTransfer.files];
-    console.log(files);
-    console.log("index: " + index)
+    // console.log(files);
+    // console.log("index: " + index)
     //uploadAvatarImage(files[0]);
     setDrag(false);
     addImagetoChapterHandler({file: files[0], index})
   }
 
   useEffect(() => {
-    console.log(drag);
+    // console.log(drag);
   }, [drag]);
 
   return (

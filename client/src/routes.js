@@ -13,7 +13,7 @@ import { AdminPage } from './pages/AdminPage'
 
 
 export const useRoutes = isAuthenticated => {
-    console.log("isAuthenticated: " + isAuthenticated)
+    // console.log("isAuthenticated: " + isAuthenticated)
     if(isAuthenticated){
         return(
             <Switch>
