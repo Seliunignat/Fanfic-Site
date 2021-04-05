@@ -15,11 +15,12 @@ export const AdminPage = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [users, setUsers] = useState([]);
 
+
   var isCurrentUserAdmin = false;
   if (auth.token) {
     const dataFromToken = jwt.verify(
       auth.token,
-      "ignat fanfic site",
+      process.env.REACT_APP_jwtSecret,
       function (error, decoded) {
         if (error) {
           message("Срок действия токена закончен");

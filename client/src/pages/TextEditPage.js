@@ -26,7 +26,7 @@ export const TextEditPage = () => {
   var isCurrentUserAdmin = false;
   if (auth.token) {
     const jwt = require("jsonwebtoken");
-    const dataFromToken = jwt.verify(auth.token, "ignat fanfic site");
+    const dataFromToken = jwt.verify(auth.token, process.env.REACT_APP_jwtSecret);
     isCurrentUserAdmin = dataFromToken.isAdmin;
   }
 

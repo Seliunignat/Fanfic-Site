@@ -1,5 +1,4 @@
 const {Router} = require('express')
-const config = require('config')
 const Text = require('../models/Text')
 const auth = require('../middleware/auth.middleware')
 const {check, validationResult} = require('express-validator')
@@ -7,8 +6,9 @@ const algoliasearch = require('algoliasearch')
 const User = require('../models/User')
 const router = Router()
 
-const client = algoliasearch("R0Q6VC5O2I", "6348fe46decdeeba82f4524c233288ee")
-const globalIndex = client.initIndex('global')
+const client = algoliasearch(process.env.ALGOLIA_APPLICATION_ID, process.env.ALGOLIA_ADMIN_API_KEY)
+const globalIndex = client.initIndex(process.env.ALGOLIA_INDEX_NAME)
+
 
 const prepareText = (text) => {
     // console.log("text " + text)
@@ -47,8 +47,9 @@ async(req, res) => {
         const text = Text({title, summary, author, date, chapters})
 
         const savedText = await text.save()
+        const textSaved = await Text.findById(savedText._id).populate('author')
 
-        const prepared = await prepareText(savedText)
+        const prepared = await prepareText(textSaved)
         await globalIndex.saveObject(prepared)
 
         const userTexts = (await User.find({_id: author}))[0].texts

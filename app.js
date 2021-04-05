@@ -2,9 +2,9 @@ const express = require('express')
 const config = require('config')
 const mongoose = require('mongoose')
 const path = require('path')
+const dotenv = require('dotenv').config()
 
 const app = express()
-
 
 app.use(express.json({ extended: true }))
 app.use('/api/auth', require('./routes/auth.routes'))
@@ -13,13 +13,13 @@ app.use('/api/comment', require('./routes/comment.routes'))
 app.use('/api/image', require('./routes/image.routes'))
 app.use('/api/search', require('./routes/search.routes'))
 
-const PORT =  process.env.PORT || config.get('port') || 5000 //Step 1
+const PORT =  process.env.PORT || 5000 //Step 1
 
 async function start()
 {
     try {
         //Step 2
-        await mongoose.connect(config.get('mongoUri'), {
+        await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true

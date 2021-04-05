@@ -28,7 +28,7 @@ export const UserPage = () => {
   if (auth.token) {
     const dataFromToken = jwt.verify(
       auth.token,
-      "ignat fanfic site",
+      process.env.REACT_APP_jwtSecret,
       function (error, decoded) {
         if (error) {
           console.log("Срок действия токена закончен");

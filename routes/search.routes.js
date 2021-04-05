@@ -3,12 +3,12 @@ const Text = require('../models/Text')
 const algoliasearch = require('algoliasearch')
 const router = Router()
 
-const client = algoliasearch("R0Q6VC5O2I", "6348fe46decdeeba82f4524c233288ee")
+const client = algoliasearch(process.env.ALGOLIA_APPLICATION_ID, process.env.ALGOLIA_ADMIN_API_KEY)
 
-const globalIndex = client.initIndex('global')
+const globalIndex = client.initIndex(process.env.ALGOLIA_INDEX_NAME)
 
 const prepareText = (text) => {
-    // console.log("text " + text)
+    console.log("text " + text)
     return{
         objectID: text._id,
         title: text.title,
@@ -41,6 +41,7 @@ const createIndex = async(req, res) => {
 
 const addToIndex = async (text) => {
     const prepared = await prepareText(text)
+    console.log(prepared)
     await globalIndex.saveObjects(prepared)
 }
 
@@ -67,7 +68,7 @@ router.get('/createAll', createIndex)
 router.get('/create', async(req, res) => {
     try {
         const {text} = req.body
-        await createIndex(text)
+        await addToIndex(text)
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так при создании индекса'})
     }

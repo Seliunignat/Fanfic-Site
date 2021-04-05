@@ -1,5 +1,4 @@
 const {Router, text} = require('express')
-const config = require('config')
 const Comment = require('../models/Comment')
 const auth = require('../middleware/auth.middleware')
 const {check, validationResult} = require('express-validator')
@@ -7,8 +6,8 @@ const algoliasearch = require('algoliasearch')
 const Text = require('../models/Text')
 const router = Router()
 
-const client = algoliasearch("R0Q6VC5O2I", "6348fe46decdeeba82f4524c233288ee")
-const globalIndex = client.initIndex('global')
+const client = algoliasearch(process.env.ALGOLIA_APPLICATION_ID, process.env.ALGOLIA_ADMIN_API_KEY)
+const globalIndex = client.initIndex(process.env.ALGOLIA_INDEX_NAME)
 
 const prepareText = (text) => {
     // console.log("text " + text)

@@ -66,6 +66,8 @@ body.dark{
 
 td{
     overflow-wrap: break-word;
+    max-width: 4.3rem;
+    min-width: 0;
 }
 
 .text-overflow{
