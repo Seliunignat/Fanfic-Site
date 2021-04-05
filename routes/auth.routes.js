@@ -10,9 +10,9 @@ const router = Router()
 router.post(
     '/register',
     [
-        check('username', 'Минимальная длина логина - 1 символ').isLength({min: 1}),
+        check('username', 'Минимальная длина логина - 1 символ').isLength({min: 1, max: 17}),
         check('password', 'Минимальная длина пароля - 3 символа').isLength({min: 3}),
-        check('email', 'Неправильный email').isEmail()
+        check('email', 'Неправильный email').isEmail().isLength({max: 20})
     ],
     async (req, res) => {
     try {

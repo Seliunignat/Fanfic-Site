@@ -51,11 +51,11 @@ export const FanficCardOnMainPage = (props) => {
             onClick={goToUserPage}
           >
             <img
-              src={text && text.author.avatar}
+              src={text && text.author && text.author.avatar}
               className="rounded-circle"
               style={{ width: "30px", height: "30px" }}
             ></img>
-            <span className="ps-1">{text && text.author.username}</span>
+            <span className="ps-1">{text && text.author && text.author.username}</span>
           </div>
         </div>
         <button
